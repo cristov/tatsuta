@@ -1,0 +1,81 @@
+<load target="webcatalog.css" />
+<load target="js/jquery.ad-gallery.js" />
+<load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
+<load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+jQuery(function($) {
+
+	$(document).ready(function(){
+
+		var gallery = $('#catalog-main').adGallery(); 
+		$('#cct-page').click(function() {
+			$('#catalog-table-contents').toggle('slide', {easing : 'swing', duration: 100,});
+		});
+
+		$('#page-slider').slider();
+	});
+
+});
+</script>
+
+	<div class="nav-wrapper">
+		<div id="tatsuta"></div>
+		<ul class="nw-sub">
+			<li id="nw-pdfdown"><img src="img/btn_pdfdown.png"></li>
+		</ul>
+		<ul class="nw-sub">
+			<li id="nw-mail" class="nav-btn"><img src="img/btn_mail.png"></li>
+			<li id="nw-print" class="nav-btn"><img src="img/btn_print.png"></li>
+			<li id="nw-size" class="nav-btn"><img src="img/btn_size.png"></li>
+		</ul>
+		<ul class="nw-sub">
+			<li id="nw-prev-start" class="nav-btn"><img src="img/btn_prev02.png"></li>
+			<li id="nw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
+			<input type="text"name="pagenation">/ 740
+			<li id="nw-go" class="nav-btn"><img src="img/btn_go.png"></li>
+			<li id="nw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
+			<li id="nw-next-end" class="nav-btn"><img src="img/btn_next02.png"></li>
+		</ul>
+		<ul class="nw-sub">
+			<li id="nw-zoomin" class="nav-btn"><img src="img/btn_zoomin.png"></li>
+			<li id="nw-zommout" class="nav-btn"><img src="img/btn_zoomout.png"></li>
+		</ul>
+		<ul class="nw-sub">
+			<li id="nw-listscreen" class="nav-btn"><img src="img/btn_listscreen.png"></li>
+			<li id="nw-fullscreen" class="nav-btn"><img src="img/btn_fullscreen.png"></li>
+		</ul>
+		<div style="clear:both"></div>
+	</div>
+
+	<div id="page-slider">
+		<img id="ps-left" src="img/slide_button01.png" width="22" height="20">
+		<img id="ps-right" src="img/slide_button02.png">
+		<div style="clear:both"></div>
+	</div>
+
+	<div id="nav-screen">
+		<img src="img/navi.png" width="280" height="197">
+	</div>
+
+
+
+	<div id="catalog-main">
+		<div id="catalog-table-contents">
+			<div id="cm-thumbs">
+				<ul id="cm-thumb-list">
+					<li loop="$document_list=>$doc">
+						<a href="{$doc->getThumbSourceFile()}">
+								<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+				<div id="catalog-content-tab">
+					<img id="cct-text" src="img/tab02.png">
+					<img id="cct-page" src="img/tab03.png">
+				</div>
+			<div class="clear"></div>
+		</div>
+		<div id="cm-image-wrapper">&nbsp;</div>
+	</div>

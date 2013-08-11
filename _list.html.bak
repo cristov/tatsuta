@@ -1,0 +1,90 @@
+{@
+	$mi = $module_info;
+	if (!$mi->thumbnail_width)  $mi->thumbnail_width  = 130;
+	if (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
+	if (!$mi->content_cut_size) $mi->content_cut_size = 200;
+
+	$list_idx = 1;
+}
+<load target="jquery.ad-gallery.css" />
+<load target="wcatalog.css" />
+<load target="js/jquery.ad-gallery.js" />
+<load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
+<load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript">
+jQuery(function($) {
+//	$('.xev3gallery').css('height',$(window).height());
+
+	$(document).ready(function(){
+
+		var gallery = $('.ad-gallery').adGallery(); 
+		$('.nav-button').click(function() {
+			$('.ad-nav').toggle('slide', {easing : 'swing', duration: 100,});
+		});
+
+		$('.page-slider').slider();
+	});
+
+});
+</script>
+	<div class="primary-menu">
+		<ul class="menu-command">
+			<img class="headlogo" src="images/logo.jpg" />
+			<li class="first">first</li>
+			<li class="prev">prev</li>
+			<li class="pages">pages</li>
+			<li class="next">next</li>
+			<li class="last">last</li>
+			<li class="page-slider">&nbsp</li>
+			<li>Content</li>
+			<li class="nav-button">Page Overview</li>
+		</ul>
+		<div class="clear"></div>
+	</div>
+
+	<div class="ad-gallery">
+		<div class="ad-nav">
+			<div class="ad-thumbs">
+				<ul class="ad-thumb-list">
+					<li loop="$document_list=>$doc">
+						<a href="{$doc->getThumbSourceFile()}">
+								<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" width="{$mi->thumbnail_width}" height="{$mi->thumbnail_height}" alt="" />
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="ad-image-wrapper"></div>
+	</div>
+
+	<div class="search_command">
+		<a class="btn" href="{getUrl('act','dispBoardWrite','document_srl','')}">{$lang->cmd_write}</a>
+		<button type="button" class="bsToggle" title="{$lang->cmd_search}">{$lang->cmd_search}</button>
+		<form cond="$grant->view" action="{getUrl()}" method="get" onsubmit="return procFilter(this, search)" id="board_search" class="board_search" no-error-return-url="true">
+			<input type="hidden" name="vid" value="{$vid}" />
+			<input type="hidden" name="mid" value="{$mid}" />
+			<input type="hidden" name="category" value="{$category}" />
+			<input type="text" name="search_keyword" value="{htmlspecialchars($search_keyword)}" title="{$lang->cmd_search}" class="iText" />
+			<select name="search_target">
+				<option loop="$search_option=>$key,$val" value="{$key}" selected="selected"|cond="$search_target==$key">{$val}</option>
+			</select>
+			<button class="btn" type="submit">{$lang->cmd_search}</button>
+			<a cond="$last_division" class="btn" href="{getUrl('page',1,'document_srl','','division',$last_division,'last_division','')}">{$lang->cmd_search_next}</a>
+		</form>
+		<a href="{getUrl('act','dispBoardTagList')}" class="tagSearch" title="{$lang->tag}">{$lang->tag}</a>
+	</div>
+<script>
+if (typeof window.xe_v3 == 'undefined') window.xe_v3 = {};
+jQuery.extend(xe_v3, {
+	page : '{$page}',
+	list_count : '{$mi->list_count}',
+	last_page  : '{$total_page}',
+	content_cut_size : '{$mi->content_cut_size}',
+	thumbnail_width  : '{$mi->thumbnail_width}',
+	thumbnail_height : '{$mi->thumbnail_height}',
+	thumbnail_type   : '{$mi->thumbnail_type}',
+	search_keyword   : '{addslashes($search_keyword)}',
+	search_target    : '{$search_target}'
+});
+</script>
