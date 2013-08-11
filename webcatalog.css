@@ -63,17 +63,23 @@ li {
 	height:100%;
 }
 #catalog-table-contents {
+	background:#ccc;
 	position:absolute;
 	width:200px;
-	float:left;
+	top:71px;
+	height:95%;
+	overflow:hidden;
 }
 #catalog-content-tab {
+	float:left;
 	width:50px;
 }
-#cm-thumb-list {
+#cm-thumbs {
+	float:left;
 	width:110px;
 }
 #cm-image-wrapper {
+	overflow:hidden;
 	position:relative;
 	top:2em;
 	margin-left:auto;
@@ -101,4 +107,9 @@ li {
 	position:absolute;
 	max-width:100%;
 	width:2000px;
+}
+.cm-preloads {
+	position: absolute;
+	left: -9000px;
+	top: -9000px;
 }

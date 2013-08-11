@@ -61,12 +61,13 @@ jQuery(function($) {
 
 
 	<div id="catalog-main">
+		<div id="cm-image-wrapper">&nbsp;</div>
 		<div id="catalog-table-contents">
 			<div id="cm-thumbs">
 				<ul id="cm-thumb-list">
 					<li loop="$document_list=>$doc">
 						<a href="{$doc->getThumbSourceFile()}">
-								<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
+							<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
 						</a>
 					</li>
 				</ul>
@@ -77,5 +78,4 @@ jQuery(function($) {
 				</div>
 			<div class="clear"></div>
 		</div>
-		<div id="cm-image-wrapper">&nbsp;</div>
 	</div>
