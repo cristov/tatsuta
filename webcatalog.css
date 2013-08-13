@@ -1,4 +1,6 @@
 html,body {
+	font-family:Tahoma,Geneva,sans-serif;
+	font-size:12px;
 	height:100%;
 	width:100%;
 	background-image: url(img/bg.png);
@@ -33,8 +35,11 @@ li {
 	padding:0 20px 0 20px;
 	margin:4px 0 4px 0;;
 }
-.mw-sub li {
-	vertical-align:-13;
+.mw-sub * {
+	text-align:center;
+	display:block;
+	float:left;
+	vertical-align:middle;
 }
 .clear {
 	float:clear;
@@ -90,10 +95,9 @@ li {
 #cm-image-wrapper {
 	overflow:hidden;
 	position:relative;
-	top:2em;
 	margin-left:auto;
 	margin-right:auto;
-	height:95%;
+	height:100%;
 	width:95%;
 }
 #cm-prev{
@@ -107,9 +111,15 @@ li {
 	height:50px;
 	}
 .cm-image{
+	padding-top:90px;
 	width:90%;
 	margin-left:auto;
 	margin-right:auto;
+}
+.cm-image img {
+	width:100%;
+	max-height:95%;
+	max-width:100%;
 }
 .cm-preloads {
 	position: absolute;
