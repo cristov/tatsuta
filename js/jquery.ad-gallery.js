@@ -672,10 +672,10 @@
         };
         this.image_wrapper.prepend(img_container);
         var size = this._getContainedImageSize(image.size.width, image.size.height);
-        img.attr('width', size.width);
-        img.attr('height', size.height);
-        img_container.css({width: size.width +'px', height: size.height +'px'});
-        this._centerImage(img_container, size.width, size.height);
+//        img.attr('width', size.width);
+//        img.attr('height', size.height);
+//        img_container.css({width: size.width +'px', height: size.height +'px'});
+//        this._centerImage(img_container, size.width, size.height);
         var desc = this._getDescription(image);
         if(desc) {
           if(!this.settings.description_wrapper && !this.settings.hooks.displayDescription) {
