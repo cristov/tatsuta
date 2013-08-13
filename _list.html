@@ -1,5 +1,6 @@
 <load target="webcatalog.css" />
 <load target="js/jquery.ad-gallery.js" />
+<load target="js/jquery.elevatezoom.js" />
 <load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
@@ -14,6 +15,42 @@ jQuery(function($) {
 		});
 
 		$('#page-slider').slider();
+
+/*
+		$('#nw-zoomin').click(function() {
+			$('div.cm-image img').each(function() {
+				var ratio = 1;
+				ratio += 0.8;
+
+				var width = $(this).width();
+				var height = $(this).height();
+				
+				$(this).css("width", width * ratio);
+				$(this).css("height", height * ratio);
+			});
+		});
+		$('#nw-zoomout').click(function() {
+			$('div.cm-image img').each(function() {
+				var ratio = 1;
+				ratio -= 0.4;
+
+				var width = $(this).width();
+				var height = $(this).height();
+				
+				$(this).css("width", width * ratio);
+				$(this).css("height", height * ratio);
+			});
+		});
+*/
+
+		$('#nav-screen-img').elevateZoom({
+			zoomWindowPosition: "cm-image-wrapper",
+			zoomWindowHeight:100,
+			zoomWindowWidth:100,
+			borderSize: 0,
+			easing:true
+		});
+
 	});
 
 });
@@ -39,7 +76,7 @@ jQuery(function($) {
 		</ul>
 		<ul class="nw-sub">
 			<li id="nw-zoomin" class="nav-btn"><img src="img/btn_zoomin.png"></li>
-			<li id="nw-zommout" class="nav-btn"><img src="img/btn_zoomout.png"></li>
+			<li id="nw-zoomout" class="nav-btn"><img src="img/btn_zoomout.png"></li>
 		</ul>
 		<ul class="nw-sub">
 			<li id="nw-listscreen" class="nav-btn"><img src="img/btn_listscreen.png"></li>
@@ -55,7 +92,7 @@ jQuery(function($) {
 	</div>
 
 	<div id="nav-screen">
-		<img src="img/navi.png" width="280" height="197">
+		<img id="nav-screen-img" src="img/navi.png" data-zoom-image="./files/attach/images/127/148/c3a134c0ec5a2c13d60acf41cfa5536b.jpg"  width="280" height="197">
 	</div>
 
 
