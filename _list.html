@@ -18,11 +18,33 @@ jQuery(function($) {
 
 		$('#nav-screen-img').elevateZoom({
 			zoomWindowPosition: "cm-image-wrapper",
-			zoomWindowHeight:100,
-			zoomWindowWidth:100,
+			zoomWindowHeight:800,
+			zoomWindowWidth:800,
 			borderSize: 0,
 			easing:true
 		});
+
+		$('#mw-zoomin').click(function() {
+			$('div.cm-image img').each(function() {
+				var width = $(this).width();
+				var height = $(this).height();
+				var ratio = 2;
+
+				$(this).css('width', width * ratio);
+				$(this).css('height', height * ratio);
+			});
+		});
+		$('#mw-zoomout').click(function() {
+			$('div.cm-image img').each(function() {
+				var width = $(this).width();
+				var height = $(this).height();
+				var ratio = 0.5;
+
+				$(this).css('width', width * ratio);
+				$(this).css('height', height * ratio);
+			});
+		});
+
 
 	});
 
@@ -65,7 +87,7 @@ jQuery(function($) {
 	</div>
 
 	<div id="nav-screen">
-		<img id="nav-screen-img" src="img/navi.png" data-zoom-image="./files/attach/images/127/148/c3a134c0ec5a2c13d60acf41cfa5536b.jpg"  width="280" height="197">
+		<img id="nav-screen-img" src="img/navi.png" data-zoom-image="./files/attach/images/127/160/70f4cee68f9d0be4406a606a4e3b9be7.jpg"  width="280" height="197">
 	</div>
 
 
