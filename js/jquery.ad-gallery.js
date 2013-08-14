@@ -669,6 +669,10 @@
           img_container.append(link);
         } else {
           img_container.append(img);
+// navigation link add
+			$('#nav-screen').empty();
+			var nav_image = $('<img id="nav-screen-img" src="'+ image.image +'" data-zoom-image="'+ image.image +'" width="280" height="197">');
+			$('#nav-screen').append(nav_image);
         };
         this.image_wrapper.prepend(img_container);
         var size = this._getContainedImageSize(image.size.width, image.size.height);

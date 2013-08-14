@@ -11,7 +11,7 @@ jQuery(function($) {
 
 		var gallery = $('#catalog-main').adGallery(); 
 		$('#cct-page').click(function() {
-			$('#cm-thumbs').toggle('slide', {easing : 'swing', duration: 100,});
+			$('#cm-thumbs').toggleClass('hide');
 		});
 
 		$('#page-slider').slider();
@@ -87,10 +87,7 @@ jQuery(function($) {
 	</div>
 
 	<div id="nav-screen">
-		<img id="nav-screen-img" src="img/navi.png" data-zoom-image="./files/attach/images/127/160/70f4cee68f9d0be4406a606a4e3b9be7.jpg"  width="280" height="197">
 	</div>
-
-
 
 	<div id="catalog-main">
 		<div id="cm-image-wrapper">&nbsp;</div>

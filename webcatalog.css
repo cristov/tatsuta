@@ -88,9 +88,17 @@ li {
 	width:50px;
 }
 #cm-thumbs {
+	overflow:hidden;
 	background:#ccc;
 	float:left;
 	width:110px;
+	-webkit-transition: width 0.5s linear;
+}
+#cm-thumb-list {
+	-webkit-transition: width 0.5s linear;
+}
+.hide {
+	width:0px !important;
 }
 #cm-image-wrapper {
 	overflow:hidden;
