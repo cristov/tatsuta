@@ -1,7 +1,7 @@
 {@
 	$mi = $module_info;
 	if (!$mi->thumbnail_width)  $mi->thumbnail_width  = 130;
-	if (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
+	ef (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
 	if (!$mi->content_cut_size) $mi->content_cut_size = 200;
 
 	$list_idx = 1;

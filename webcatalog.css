@@ -41,8 +41,30 @@ li {
 	float:left;
 	vertical-align:middle;
 }
+#mw-input-pagenum {
+	margin-top:8px;
+	margin-left:5px;
+	margin-right:5px;
+}
+#mw-input-pagenum span {
+	padding-top:3px;
+}
 .clear {
 	float:clear;
+}
+.clearfix:after {
+	content: " ";
+	display: block;
+	clear: both;
+	line-height:0;
+	height:0;
+	visibility: hidden;
+}
+.clearfix a {
+	display:block;
+}
+.clearfix {
+	display: inline-block;
 }
 #tatsuta {
 	float:left;
@@ -91,11 +113,22 @@ li {
 	overflow:hidden;
 	background:#ccc;
 	float:left;
-	width:110px;
-	-webkit-transition: width 0.5s linear;
+	width:150px;
+	right:0px;
+	left:auto;
+	-webkit-transition: width 0.25s linear;
 }
 #cm-thumb-list {
-	-webkit-transition: width 0.5s linear;
+	margin-left:auto;
+	margin-right:auto;
+	width:130px;
+	-webkit-transition: width 0.25s linear;
+}
+#cm-thumb-list li {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+#cm-thumb-list img{
 }
 .hide {
 	width:0px !important;
@@ -118,6 +151,14 @@ li {
 	width:50px;
 	height:50px;
 	}
+#cm-loader {
+	position:absolute;
+	top:48%;
+	left:50%;
+	background-image:url(img/loader.gif);
+	width:30px;
+	height:30px;
+}
 .cm-image{
 	padding-top:90px;
 	width:90%;
@@ -126,8 +167,10 @@ li {
 }
 .cm-image img {
 	width:100%;
-	max-height:95%;
-	max-width:100%;
+	min-height:40%;
+	min-width:40%;
+	max-height:1000%;
+	max-width:1000%;
 }
 .cm-preloads {
 	position: absolute;

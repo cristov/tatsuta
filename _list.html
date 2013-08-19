@@ -1,6 +1,13 @@
+{@
+	$mi = $module_info;
+	if (!$mi->thumbnail_width)  $mi->thumbnail_width  = 130;
+	if (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
+	
+	$mi->thumbnail_type = 'ratio';
+}
 <load target="webcatalog.css" />
-<load target="js/jquery.ad-gallery.js" />
 <load target="js/jquery.elevatezoom.js" />
+<load target="js/jquery.ad-gallery.js" />
 <load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
@@ -10,11 +17,13 @@ jQuery(function($) {
 	$(document).ready(function(){
 
 		var gallery = $('#catalog-main').adGallery(); 
+
 		$('#cct-page').click(function() {
 			$('#cm-thumbs').toggleClass('hide');
 		});
 
 		$('#page-slider').slider();
+
 
 		$('#nav-screen-img').elevateZoom({
 			zoomWindowPosition: "cm-image-wrapper",
@@ -23,6 +32,7 @@ jQuery(function($) {
 			borderSize: 0,
 			easing:true
 		});
+		
 
 		$('#mw-zoomin').click(function() {
 			$('div.cm-image img').each(function() {
@@ -38,16 +48,13 @@ jQuery(function($) {
 			$('div.cm-image img').each(function() {
 				var width = $(this).width();
 				var height = $(this).height();
-				var ratio = 0.5;
+				var ratio = 2;
 
-				$(this).css('width', width * ratio);
-				$(this).css('height', height * ratio);
+				$(this).css('width', width / ratio);
+				$(this).css('height', height / ratio);
 			});
 		});
-
-
 	});
-
 });
 </script>
 
@@ -64,7 +71,7 @@ jQuery(function($) {
 		<ul class="mw-sub">
 			<li id="mw-prev-start" class="nav-btn"><img src="img/btn_prev02.png"></li>
 			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
-			<div><input type="text"name="pagenation">/ 740</div>
+			<div id="mw-input-pagenum"><input type="text"name="pagenation"><span>/ 740</span></div>
 			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
 			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
 			<li id="mw-next-end" class="nav-btn"><img src="img/btn_next02.png"></li>
@@ -77,13 +84,13 @@ jQuery(function($) {
 			<li id="mw-listscreen" class="nav-btn"><img src="img/btn_listscreen.png"></li>
 			<li id="mw-fullscreen" class="nav-btn"><img src="img/btn_fullscreen.png"></li>
 		</ul>
-		<div style="clear:both"></div>
+		<div class="clear"></div>
 	</div>
 
 	<div id="page-slider">
 		<img id="ps-left" src="img/slide_button01.png" width="22" height="20">
 		<img id="ps-right" src="img/slide_button02.png">
-		<div style="clear:both"></div>
+		<div class="clear"></div>
 	</div>
 
 	<div id="nav-screen">
@@ -94,7 +101,7 @@ jQuery(function($) {
 		<div id="catalog-table-contents">
 			<div id="cm-thumbs">
 				<ul id="cm-thumb-list">
-					<li loop="$document_list=>$doc">
+					<li class="clearfix" loop="$document_list=>$doc">
 						<a href="{$doc->getThumbSourceFile()}">
 							<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
 						</a>

@@ -33,7 +33,7 @@
                        onStart: false,
                        onStop: false
                      },
-                     effect: 'slide-hori', // or 'slide-vert', 'fade', or 'resize', 'none'
+                     effect: 'fade', // or 'slide-vert', 'fade', or 'resize', 'none'
                      enable_keyboard_move: true,
                      cycle: true,
                      hooks: {
@@ -142,7 +142,7 @@
     gallery_info: false,
     nav: false,
     loader: false,
-    preloads: false,
+    preloads: true,
     thumbs_wrapper: false,
     thumbs_wrapper_width: 0,
     scroll_back: false,
@@ -207,6 +207,7 @@
       if(this.settings.enable_keyboard_move) {
         this.initKeyEvents();
       };
+		this.initMenuButtons();
       this.initHashChange();
       var start_at = parseInt(this.settings.start_at_index, 10);
       if(typeof this.getIndexFromHash() != "undefined") {
@@ -243,7 +244,7 @@
       this.nav = this.wrapper.find('#catalog-table-contents');
       this.thumbs_wrapper = this.nav.find('#cm-thumbs');
       this.preloads = $('<div class="cm-preloads"></div>');
-      this.loader = $('<img class="cm-loader" src="'+ this.settings.loader_image +'">');
+      this.loader = $('<div id="cm-loader"></div>');
       this.image_wrapper.append(this.loader);
       this.loader.hide();
       $(document.body).append(this.preloads);
@@ -294,7 +295,7 @@
       var inter = setInterval(
         function() {
           if(thumb_count == thumbs_loaded) {
-            context._setThumbListWidth(context.thumbs_wrapper_width);
+//            context._setThumbListWidth(context.thumbs_wrapper_width);
             clearInterval(inter);
           };
         },
@@ -304,7 +305,7 @@
     _setThumbListWidth: function(wrapper_width) {
       wrapper_width -= 100;
       var list = this.nav.find('#cm-thumb-list');
-    //  list.css('width', wrapper_width +'px');
+      list.css('width', wrapper_width +'px');
       var i = 1;
       var last_height = list.height();
       while(i < 201) {
@@ -379,6 +380,17 @@
         }
       );
     },
+	initMenuButtons: function() {
+		var context = this;
+		$('#mw-prev-page').click(function() {
+			context.prevImage();
+			context.slideshow.stop();	
+		});
+		$('#mw-next-page').click(function() {
+			context.nextImage();
+			context.slideshow.stop();	
+		});
+	},
     getIndexFromHash: function() {
       if(window.location.hash && window.location.hash.indexOf('#ad-image-') === 0) {
         var id = window.location.hash.replace(/^#ad-image-/g, '');
@@ -401,7 +413,7 @@
       var thumb_width = thumb_link[0].parentNode.offsetWidth;
       this.thumbs_wrapper_width -= thumb_width;
       thumb_link.remove();
-      this._setThumbListWidth(this.thumbs_wrapper_width);
+//      this._setThumbListWidth(this.thumbs_wrapper_width);
       this.gallery_info.html((this.current_index + 1) +' / '+ this.images.length);
       this.thumbs_wrapper.find('a').each(
         function(i) {
@@ -441,7 +453,7 @@
         };
         
         context.thumbs_wrapper_width += thumb_width;
-        context._setThumbListWidth(context.thumbs_wrapper_width);
+//        context._setThumbListWidth(context.thumbs_wrapper_width);
       });
       var i = this.images.length;
       link.data("ad-i", i);
@@ -472,8 +484,8 @@
       };
     },
     initNextAndPrev: function() {
-      this.next_link = $('<div class="cm-next">&nbsp;</div>');
-      this.prev_link = $('<div class="cm-prev">&nbsp;</div>');
+      this.next_link = $('<img id="cm-next">&nbsp;</div>');
+      this.prev_link = $('<img id="cm-prev">&nbsp;</div>');
       this.image_wrapper.append(this.next_link);
       this.image_wrapper.append(this.prev_link);
       var context = this;
@@ -489,7 +501,7 @@
         }
       ).click(
         function() {
-          if($(this).is('.cm-next')) {
+          if($(this).is('#cm-next')) {
             context.nextImage();
             context.slideshow.stop();
           } else {
