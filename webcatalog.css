@@ -93,6 +93,7 @@ li {
 	top: 100px;
 	right:40px;
 	z-index:999;
+	opacity:0.6;
 }
 #nav-screen-img {
 	width: 280px;
