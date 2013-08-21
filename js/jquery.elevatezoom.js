@@ -136,9 +136,11 @@ if ( typeof Object.create !== 'function' ) {
 					self.zoomWindowStyle = "overflow: hidden;"
 						+ "background-position: 0px 0px;text-align:center;"  
 						+ "background-color: " + String(self.options.zoomWindowBgColour)            
-						+ ";width: " + String(self.options.zoomWindowWidth) + "px;"
-						+ "height: " + String(self.options.zoomWindowHeight)
-						+ "px;float: left;"
+						//+ ";width: " + String(self.options.zoomWindowWidth) + "px;"
+						//+ "height: " + String(self.options.zoomWindowHeight)
+						+ ";width: 100%;"
+						+ "height: 100%;"
+						+ "float: left;"
 						+ "background-size: "+ self.largeWidth/self.currentZoomLevel+ "px " +self.largeHeight/self.currentZoomLevel + "px;"
 						+ "display: none;z-index:100"
 						+ "px;border: " + String(self.options.borderSize) 
@@ -235,10 +237,13 @@ if ( typeof Object.create !== 'function' ) {
 
 				//create the div's                                                + ""
 				//self.zoomContainer = $('<div/>').addClass('zoomContainer').css({"position":"relative", "height":self.nzHeight, "width":self.nzWidth});
+				//
+				//
+// modify cristov
+//				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;"></div>');
+//				$('body').append(self.zoomContainer);	
 
-				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;"></div>');
-				$('body').append(self.zoomContainer);	
-
+				self.zoomContainer = $('.cm-image');
 
 				//this will add overflow hidden and contrain the lens on lens mode       
 				if(self.options.containLensZoom && self.options.zoomType == "lens"){
@@ -278,20 +283,22 @@ if ( typeof Object.create !== 'function' ) {
 
 
 				//create zoom window 
-				if(isNaN(self.options.zoomWindowPosition)){
+				if(self.options.zoomWindowPosition.constructor == Object ){
 					self.zoomWindow = $("<div style='z-index:999;left:"+(self.windowOffsetLeft)+"px;top:"+(self.windowOffsetTop)+"px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo('body')
 					.click(function () {
 						self.$elem.trigger('click');
 					});
 				}else{
-					self.zoomWindow = $("<div style='z-index:999;left:"+(self.windowOffsetLeft)+"px;top:"+(self.windowOffsetTop)+"px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
+					self.zoomContainer.empty();
+					self.zoomWindow = $("<div style='z-index:990;left:120px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo(self.zoomContainer)
 					.click(function () {
 						self.$elem.trigger('click');
 					});
 				}              
-				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
+				//self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
+				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({"width":"100%", "height":"100%"});
 				self.zoomWindow.wrap(self.zoomWindowContainer);
 
 
@@ -880,8 +887,10 @@ if ( typeof Object.create !== 'function' ) {
 						self.windowOffsetLeft =(self.nzWidth); //DONE 1, 2, 3, 4, 16
 						break;            
 					default: //done  
-						self.windowOffsetTop = (self.options.zoomWindowOffety);//DONE - 1
-					self.windowOffsetLeft =(self.nzWidth); //DONE 1, 2, 3, 4, 16
+						//self.windowOffsetTop = (self.options.zoomWindowOffety);//DONE - 1
+						//self.windowOffsetLeft =(self.nzWidth); //DONE 1, 2, 3, 4, 16
+						self.windowOffsetTop = (90);//DONE - 1
+						self.windowOffsetLeft =(120); //DONE 1, 2, 3, 4, 16
 					} 
 				} //end isNAN
 				else{
@@ -1603,7 +1612,7 @@ if ( typeof Object.create !== 'function' ) {
 			zoomWindowHeight: 400,
 			zoomWindowOffetx: 0,
 			zoomWindowOffety: 0,
-			zoomWindowPosition: 1,
+			zoomWindowPosition: 0,
 			zoomWindowBgColour: "#fff",
 			lensFadeIn: false,
 			lensFadeOut: false,

@@ -24,7 +24,7 @@ jQuery(function($) {
 
 		$('#page-slider').slider();
 
-
+		/*
 		$('#nav-screen-img').elevateZoom({
 			zoomWindowPosition: "cm-image-wrapper",
 			zoomWindowHeight:800,
@@ -32,6 +32,7 @@ jQuery(function($) {
 			borderSize: 0,
 			easing:true
 		});
+		*/
 		
 
 		$('#mw-zoomin').click(function() {
@@ -43,6 +44,7 @@ jQuery(function($) {
 				$(this).css('width', width * ratio);
 				$(this).css('height', height * ratio);
 			});
+			$('#nav-screen-img').elevateZoom();
 		});
 		$('#mw-zoomout').click(function() {
 			$('div.cm-image img').each(function() {
@@ -94,6 +96,7 @@ jQuery(function($) {
 	</div>
 
 	<div id="nav-screen">
+		<img id="nav-screen-img">
 	</div>
 
 	<div id="catalog-main">
