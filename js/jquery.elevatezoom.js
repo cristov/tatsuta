@@ -291,7 +291,7 @@ if ( typeof Object.create !== 'function' ) {
 					});
 				}else{
 					self.zoomContainer.empty();
-					self.zoomWindow = $("<div style='z-index:990;left:120px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
+					self.zoomWindow = $("<div style='left:120px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo(self.zoomContainer)
 					.click(function () {
 						self.$elem.trigger('click');
