@@ -292,7 +292,7 @@ if ( typeof Object.create !== 'function' ) {
 					});
 				}else{
 					//self.zoomContainer.empty();
-					self.zoomWindow = $("<div style='left:120px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
+					self.zoomWindow = $("<div style='left:60px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo(self.zoomContainer)
 					.click(function () {
 						self.$elem.trigger('click');
@@ -907,7 +907,7 @@ if ( typeof Object.create !== 'function' ) {
 						//self.windowOffsetTop = (self.options.zoomWindowOffety);//DONE - 1
 						//self.windowOffsetLeft =(self.nzWidth); //DONE 1, 2, 3, 4, 16
 						self.windowOffsetTop = (90);//DONE - 1
-						self.windowOffsetLeft =(120); //DONE 1, 2, 3, 4, 16
+						self.windowOffsetLeft =(60); //DONE 1, 2, 3, 4, 16
 					} 
 				} //end isNAN
 				else{
