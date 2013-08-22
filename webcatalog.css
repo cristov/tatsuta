@@ -109,7 +109,8 @@ li {
 	float:left;
 	width:50px;
 }
-#cm-thumbs {
+#cm-thumbs,
+#cm-content-list {
 	overflow:hidden;
 	background:#ccc;
 	float:left;
@@ -127,8 +128,6 @@ li {
 #cm-thumb-list li {
 	margin-top:5px;
 	margin-bottom:5px;
-}
-#cm-thumb-list img{
 }
 .hide {
 	width:0px !important;
@@ -176,4 +175,8 @@ li {
 	position: absolute;
 	left: -9000px;
 	top: -9000px;
+}
+#adminBar {
+	display:absolute !important;
+	bottom:0;
 }

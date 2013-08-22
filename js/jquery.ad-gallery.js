@@ -382,6 +382,10 @@
     },
 	initMenuButtons: function() {
 		var context = this;
+		$('#mw-start-page').click(function() {
+			context.firstImage();
+			context.slideshow.stop();
+		});
 		$('#mw-prev-page').click(function() {
 			context.prevImage();
 			context.slideshow.stop();	
@@ -390,6 +394,7 @@
 			context.nextImage();
 			context.slideshow.stop();	
 		});
+		
 	},
     getIndexFromHash: function() {
       if(window.location.hash && window.location.hash.indexOf('#ad-image-') === 0) {
@@ -763,6 +768,12 @@
       };
       return next;
     },
+	 firstImage: function(callback) {
+		var first = 0;
+		this.preloadImage(first + 1);
+		this.showImage(first, callback);
+		return true;
+	},
     nextImage: function(callback) {
       var next = this.nextIndex();
       if(next === false) return false;
@@ -788,6 +799,12 @@
       this.showImage(prev, callback);
       return true;
     },
+	 endImage: function(callback) {
+		var end = 1;
+		this.preloadImage(end + 1);
+		this.showImage(end, callback);
+		return true;
+	},
     preloadAll: function() {
       var context = this;
       var i = 0;

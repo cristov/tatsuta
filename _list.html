@@ -22,8 +22,11 @@ jQuery(function($) {
 			$('#cm-thumbs').toggleClass('hide');
 		});
 
-		$('#page-slider').slider();
+		$('#cct-list').click(function() {
+			$('#cm-content-list').toggleClass('hide');
+		});
 
+		$('#page-slider').slider();
 
 		$('#nav-screen-img').elevateZoom({
 			zoomWindowPosition: "cm-image-wrapper",
@@ -69,12 +72,12 @@ jQuery(function($) {
 			<li id="mw-size" class="nav-btn"><img src="img/btn_size.png"></li>
 		</ul>
 		<ul class="mw-sub">
-			<li id="mw-prev-start" class="nav-btn"><img src="img/btn_prev02.png"></li>
+			<li id="mw-start-page" class="nav-btn"><img src="img/btn_prev02.png"></li>
 			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
 			<div id="mw-input-pagenum"><input type="text"name="pagenation"><span>/ 740</span></div>
 			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
 			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
-			<li id="mw-next-end" class="nav-btn"><img src="img/btn_next02.png"></li>
+			<li id="mw-end-page" class="nav-btn"><img src="img/btn_next02.png"></li>
 		</ul>
 		<ul class="mw-sub">
 			<li id="mw-zoomin" class="nav-btn"><img src="img/btn_zoomin.png"></li>
@@ -95,11 +98,10 @@ jQuery(function($) {
 
 	<div id="nav-screen">
 	</div>
-
 	<div id="catalog-main">
 		<div id="cm-image-wrapper">&nbsp;</div>
 		<div id="catalog-table-contents">
-			<div id="cm-thumbs">
+			<div id="cm-thumbs" class="hide">
 				<ul id="cm-thumb-list">
 					<li class="clearfix" loop="$document_list=>$doc">
 						<a href="{$doc->getThumbSourceFile()}">
@@ -108,9 +110,16 @@ jQuery(function($) {
 					</li>
 				</ul>
 			</div>
+			<div id="cm-content-list" class="hide">
+				<ul>
+					<li loop="$notice_list=>$no,$document">
+						{$document->getTitle($module_info->subject_cut_size)}
+					</li>
+				</ul>
+			</div>
 			<div id="catalog-content-tab">
 				<img id="cct-page" src="img/tab01.png">
-				<img id="cct-text" src="img/tab02.png">
+				<img id="cct-list" src="img/tab02.png">
 				<img id="cct-close" src="img/tab03.png">
 			</div>
 		</div>
