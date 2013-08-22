@@ -26,8 +26,12 @@ jQuery(function($) {
 			$('#cm-content-list').toggleClass('hide');
 		});
 
+<<<<<<< HEAD
 		$('#page-slider').slider();
 
+=======
+		/*
+>>>>>>> 72c27bb07eb046c682850b4094a9f141bb8a51c2
 		$('#nav-screen-img').elevateZoom({
 			zoomWindowPosition: "cm-image-wrapper",
 			zoomWindowHeight:800,
@@ -35,27 +39,47 @@ jQuery(function($) {
 			borderSize: 0,
 			easing:true
 		});
+		*/
 		
 
-		$('#mw-zoomin').click(function() {
-			$('div.cm-image img').each(function() {
-				var width = $(this).width();
-				var height = $(this).height();
-				var ratio = 2;
+		var isZoomActive = false;
 
-				$(this).css('width', width * ratio);
-				$(this).css('height', height * ratio);
-			});
+		$('#mw-zoomin').click(function() {
+			if (!isZoomActive) {
+				isZoomActive = true;
+				/*
+				$('div.cm-image img').each(function() {
+					var width = $(this).width();
+					var height = $(this).height();
+					var ratio = 2;
+
+					$(this).css('width', width * ratio);
+					$(this).css('height', height * ratio);
+				});
+				*/
+				$('div.cm-image img').css('display', 'none');
+				$('#nav-screen').css('display', 'block');
+				$('#nav-screen-img').elevateZoom();
+			}
 		});
 		$('#mw-zoomout').click(function() {
-			$('div.cm-image img').each(function() {
-				var width = $(this).width();
-				var height = $(this).height();
-				var ratio = 2;
+			if (isZoomActive) {
+				isZoomActive = false;
+				/*
+				$('div.cm-image img').each(function() {
+					var width = $(this).width();
+					var height = $(this).height();
+					var ratio = 2;
 
-				$(this).css('width', width / ratio);
-				$(this).css('height', height / ratio);
-			});
+					$(this).css('width', width / ratio);
+					$(this).css('height', height / ratio);
+				});
+				*/
+				$('div.cm-image img').css('display', 'block');
+				$('#nav-screen').css('display', 'none');
+				$('div.zoomLens').remove();
+				$('div.zoomWindowContainer').remove();
+			}
 		});
 	});
 });
@@ -97,6 +121,7 @@ jQuery(function($) {
 	</div>
 
 	<div id="nav-screen">
+		<img id="nav-screen-img">
 	</div>
 	<div id="catalog-main">
 		<div id="cm-image-wrapper">&nbsp;</div>
