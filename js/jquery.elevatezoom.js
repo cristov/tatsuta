@@ -49,8 +49,6 @@ if ( typeof Object.create !== 'function' ) {
 
 				self.refresh( 1 );
 
-
-
 				//Create the image swap from the gallery 
 				$('#'+self.options.gallery + ' a').click( function(e) { 
 
@@ -132,6 +130,9 @@ if ( typeof Object.create !== 'function' ) {
 
 
 				//if window zoom        
+				console.log('largeWidth : ' + self.largeWidth);
+				console.log('currentZoomLevel : ' + self.currentZoomLevel);
+				console.log('/ : ' + self.largeWidth/self.currentZoomLevel);
 				if(self.options.zoomType == "window") {
 					self.zoomWindowStyle = "overflow: hidden;"
 						+ "background-position: 0px 0px;text-align:center;"  
@@ -290,7 +291,7 @@ if ( typeof Object.create !== 'function' ) {
 						self.$elem.trigger('click');
 					});
 				}else{
-					self.zoomContainer.empty();
+					//self.zoomContainer.empty();
 					self.zoomWindow = $("<div style='left:120px;top:90px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo(self.zoomContainer)
 					.click(function () {
@@ -317,14 +318,16 @@ if ( typeof Object.create !== 'function' ) {
 				/*-------------------END THE ZOOM WINDOW AND LENS----------------------------------*/
 				//touch events
 				self.$elem.bind('touchmove', function(e){    
+					console.log('self.$elem.bind(touchmove');
 					e.preventDefault();
 					var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];  
 					self.setPosition(touch);
 
 				});  
 				self.zoomContainer.bind('touchmove', function(e){ 
+					console.log('self.zoomContainer.bind(touchmove');
 					if(self.options.zoomType == "inner") {
-						self.showHideWindow("show");
+						//self.showHideWindow("show");
 
 					}
 					e.preventDefault();
@@ -333,18 +336,21 @@ if ( typeof Object.create !== 'function' ) {
 
 				});  	
 				self.zoomContainer.bind('touchend', function(e){ 
-					self.showHideWindow("hide");
+					console.log('self.zoomContainer.bind(touchend');
+					//self.showHideWindow("hide");
 					if(self.options.showLens) {self.showHideLens("hide");}
 					if(self.options.tint) {self.showHideTint("hide");}
 				});  	
 
 				self.$elem.bind('touchend', function(e){ 
-					self.showHideWindow("hide");
+					console.log('self.$elem.bind(touchend');
+					//self.showHideWindow("hide");
 					if(self.options.showLens) {self.showHideLens("hide");}
 					if(self.options.tint) {self.showHideTint("hide");}
 				});  	
 				if(self.options.showLens) {
 					self.zoomLens.bind('touchmove', function(e){ 
+					console.log('self.zoomLens.bind(touchmove');
 
 						e.preventDefault();
 						var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];  
@@ -353,14 +359,16 @@ if ( typeof Object.create !== 'function' ) {
 
 
 					self.zoomLens.bind('touchend', function(e){ 
-						self.showHideWindow("hide");
+					console.log('self.zoomLens.bind(touchend');
+						//self.showHideWindow("hide");
 						if(self.options.showLens) {self.showHideLens("hide");}
 						if(self.options.tint) {self.showHideTint("hide");}
 					});  
 				}
 				//Needed to work in IE
 				self.$elem.bind('mousemove', function(e){   
-					if(self.overWindow == false){self.setElements("show");}
+					console.log('self.$elem.bind(mousemove');
+					//if(self.overWindow == false){self.setElements("show");}
 					//make sure on orientation change the setposition is not fired
 					if(self.lastX !== e.clientX || self.lastY !== e.clientY){
 						self.setPosition(e);
@@ -373,7 +381,8 @@ if ( typeof Object.create !== 'function' ) {
 
 				self.zoomContainer.bind('mousemove', function(e){ 
 
-					if(self.overWindow == false){self.setElements("show");} 
+					console.log('self.zoomContainer.bind(touchmove');
+					//if(self.overWindow == false){self.setElements("show");} 
 
 					//make sure on orientation change the setposition is not fired 
 					if(self.lastX !== e.clientX || self.lastY !== e.clientY){
@@ -385,6 +394,7 @@ if ( typeof Object.create !== 'function' ) {
 				});  	
 				if(self.options.zoomType != "inner") {
 					self.zoomLens.bind('mousemove', function(e){      
+					console.log('self.zoomLens.bind(touchmove');
 						//make sure on orientation change the setposition is not fired
 						if(self.lastX !== e.clientX || self.lastY !== e.clientY){
 							self.setPosition(e);
@@ -396,6 +406,7 @@ if ( typeof Object.create !== 'function' ) {
 				}
 				if(self.options.tint) {
 					self.zoomTint.bind('mousemove', function(e){ 
+					console.log('self.zoomTint.bind(touchmove');
 						//make sure on orientation change the setposition is not fired
 						if(self.lastX !== e.clientX || self.lastY !== e.clientY){
 							self.setPosition(e);
@@ -408,6 +419,7 @@ if ( typeof Object.create !== 'function' ) {
 				}
 				if(self.options.zoomType == "inner") {
 					self.zoomWindow.bind('mousemove', function(e) {
+					console.log('self.zoomWindow.bind(touchmove');
 						//self.overWindow = true;
 						//make sure on orientation change the setposition is not fired
 						if(self.lastX !== e.clientX || self.lastY !== e.clientY){
@@ -424,13 +436,15 @@ if ( typeof Object.create !== 'function' ) {
 				//  lensFadeOut: 500,  zoomTintFadeIn
 				self.zoomContainer.add(self.$elem).mouseenter(function(){
 
-					if(self.overWindow == false){self.setElements("show");} 
+					console.log('self.zoomContainer.add(self.$elem).mouseenter');
+					//if(self.overWindow == false){self.setElements("show");} 
 
 
 				}).mouseleave(function(){
-					if(!self.scrollLock){
-						self.setElements("hide");
-					}
+					console.log('self.zoomContainer.add(self.$elem).mouseleave');
+					//if(!self.scrollLock){
+					//	self.setElements("hide");
+					//}
 				});
 				//end ove image
 
@@ -440,10 +454,12 @@ if ( typeof Object.create !== 'function' ) {
 
 				if(self.options.zoomType != "inner") {
 					self.zoomWindow.mouseenter(function(){
+					console.log('self.zoomWindow.mouseenter');
 						self.overWindow = true;   
-						self.setElements("hide");                  
+						//self.setElements("hide");                  
 					}).mouseleave(function(){
 
+					console.log('self.zoomWindow.mouseleave');
 						self.overWindow = false;
 					});
 				}
@@ -523,6 +539,7 @@ if ( typeof Object.create !== 'function' ) {
 					});
 				}
 
+				self.showHideWindow("show");
 
 			},
 			setElements: function(type) {
@@ -614,7 +631,7 @@ if ( typeof Object.create !== 'function' ) {
 
 				// if the mouse position of the slider is one of the outerbounds, then hide  window and lens
 				if (self.mouseLeft <= 0 || self.mouseTop < 0 || self.mouseLeft > self.nzWidth || self.mouseTop > self.nzHeight ) {				          
-					self.setElements("hide");
+					//self.setElements("hide");
 					return;
 				}
 				//else continue with operations
@@ -1600,7 +1617,7 @@ if ( typeof Object.create !== 'function' ) {
 	$.fn.elevateZoom.options = {
 			zoomActivation: "hover", // Can also be click (PLACEHOLDER FOR NEXT VERSION)
 			preloading: 1, //by default, load all the images, if 0, then only load images after activated (PLACEHOLDER FOR NEXT VERSION)
-			zoomLevel: 0.7, //default zoom level of image
+			zoomLevel: 1, //default zoom level of image
 			scrollZoom: false, //allow zoom on mousewheel, true to activate
 			scrollZoomIncrement: 0.1,  //steps of the scrollzoom
 			minZoomLevel: false,

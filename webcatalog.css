@@ -94,6 +94,7 @@ li {
 	right:40px;
 	z-index:999;
 	opacity:0.6;
+	display:none;
 }
 #nav-screen-img {
 	width: 280px;

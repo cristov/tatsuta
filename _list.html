@@ -35,26 +35,41 @@ jQuery(function($) {
 		*/
 		
 
-		$('#mw-zoomin').click(function() {
-			$('div.cm-image img').each(function() {
-				var width = $(this).width();
-				var height = $(this).height();
-				var ratio = 2;
+		var isZoomActive = false;
 
-				$(this).css('width', width * ratio);
-				$(this).css('height', height * ratio);
-			});
-			$('#nav-screen-img').elevateZoom();
+		$('#mw-zoomin').click(function() {
+			if (!isZoomActive) {
+				isZoomActive = true;
+				/*
+				$('div.cm-image img').each(function() {
+					var width = $(this).width();
+					var height = $(this).height();
+					var ratio = 2;
+
+					$(this).css('width', width * ratio);
+					$(this).css('height', height * ratio);
+				});
+				*/
+				$('#nav-screen').css('display', 'block');
+				$('#nav-screen-img').elevateZoom();
+			}
 		});
 		$('#mw-zoomout').click(function() {
-			$('div.cm-image img').each(function() {
-				var width = $(this).width();
-				var height = $(this).height();
-				var ratio = 2;
+			if (isZoomActive) {
+				isZoomActive = false;
+				/*
+				$('div.cm-image img').each(function() {
+					var width = $(this).width();
+					var height = $(this).height();
+					var ratio = 2;
 
-				$(this).css('width', width / ratio);
-				$(this).css('height', height / ratio);
-			});
+					$(this).css('width', width / ratio);
+					$(this).css('height', height / ratio);
+				});
+				*/
+				$('#nav-screen').css('display', 'none');
+				$('div.zoomWindowContainer').remove();
+			}
 		});
 	});
 });
