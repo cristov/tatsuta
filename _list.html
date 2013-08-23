@@ -123,14 +123,11 @@ jQuery(function($) {
 			</div>
 			<div id="cm-contents" class="hide">
 				<ul id="cm-content-list">
-					<li class="clearfix" loop="$notice_list=>$notice">
-						{$notice->getTitle($module_info->subject_cut_size)}
-					</li>
-					<!--
 					<li class="clearfix" loop="$notice_list=>$no,$document">
-						{$document->getTitle($module_info->subject_cut_size)}
+						<a href="{$document->document_srl}" target="_blank">
+							{$document->getTitle($module_info->subject_cut_size)}
+						</a>
 					</li>
-					-->
 				</ul>
 			</div>
 			<div id="catalog-content-tab">
