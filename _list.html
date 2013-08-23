@@ -23,7 +23,7 @@ jQuery(function($) {
 		});
 
 		$('#cct-list').click(function() {
-			$('#cm-content-list').toggleClass('hide');
+			$('#cm-contents').toggleClass('hide');
 		});
 
 		$('#page-slider').slider();
@@ -121,11 +121,16 @@ jQuery(function($) {
 					</li>
 				</ul>
 			</div>
-			<div id="cm-content-list" class="hide">
-				<ul>
-					<li loop="$notice_list=>$no,$document">
+			<div id="cm-contents" class="hide">
+				<ul id="cm-content-list">
+					<li class="clearfix" loop="$notice_list=>$notice">
+						{$notice->getTitle($module_info->subject_cut_size)}
+					</li>
+					<!--
+					<li class="clearfix" loop="$notice_list=>$no,$document">
 						{$document->getTitle($module_info->subject_cut_size)}
 					</li>
+					-->
 				</ul>
 			</div>
 			<div id="catalog-content-tab">

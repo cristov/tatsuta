@@ -9,6 +9,7 @@ html,body {
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
+	overflow-x: hidden;
 }
 ul{
 	margin:0;
@@ -116,7 +117,7 @@ li {
 	width:50px;
 }
 #cm-thumbs,
-#cm-content-list {
+#cm-contents {
 	overflow:hidden;
 	background:#ccc;
 	float:left;
@@ -125,13 +126,15 @@ li {
 	left:auto;
 	-webkit-transition: width 0.25s linear;
 }
-#cm-thumb-list {
+#cm-thumb-list,
+#cm-content-list {
 	margin-left:auto;
 	margin-right:auto;
 	width:130px;
 	-webkit-transition: width 0.25s linear;
 }
-#cm-thumb-list li {
+#cm-thumb-list li,
+#cm-content-list li {
 	margin-top:5px;
 	margin-bottom:5px;
 }
