@@ -122,8 +122,10 @@ li {
 	background:#ccc;
 	float:left;
 	width:150px;
+	height:100%;
 	right:0px;
 	left:auto;
+	border-right:1px dotted #888;
 	-webkit-transition: width 0.25s linear;
 }
 #cm-thumb-list,
