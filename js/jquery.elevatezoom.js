@@ -296,7 +296,7 @@ if ( typeof Object.create !== 'function' ) {
 					});
 				}              
 				//self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
-				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({"width":"100%", "height":"100%"});
+				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({"width":"100%", "height":"100%", "position":"absolute", "top": "0", "left": "0"});
 				self.zoomWindow.wrap(self.zoomWindowContainer);
 
 

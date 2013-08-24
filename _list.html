@@ -66,6 +66,11 @@ jQuery(function($) {
 				$('div.zoomWindowContainer').remove();
 			}
 		});
+		$('span.cm-content-a').click(function() {
+			var data = $(this).attr('data');
+
+			$('a#' + data).trigger('click');
+		});
 	});
 });
 </script>
@@ -114,7 +119,7 @@ jQuery(function($) {
 			<div id="cm-thumbs" class="hide">
 				<ul id="cm-thumb-list">
 					<li class="clearfix" loop="$document_list=>$doc">
-						<a href="{$doc->getThumbSourceFile()}">
+						<a href="{$doc->getThumbSourceFile()}" id="{$doc->document_srl}">
 							<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
 						</a>
 					</li>
@@ -123,9 +128,9 @@ jQuery(function($) {
 			<div id="cm-contents" class="hide">
 				<ul id="cm-content-list">
 					<li class="clearfix" loop="$notice_list=>$no,$document">
-						<a href="{$document->document_srl}" target="_blank">
+						<span class="cm-content-a" data="{$no}">
 							{$document->getTitle($module_info->subject_cut_size)}
-						</a>
+						</span>
 					</li>
 				</ul>
 			</div>

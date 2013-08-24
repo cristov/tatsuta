@@ -141,6 +141,11 @@ li {
 	margin-bottom:5px;
 	width:100%;
 }
+.cm-content-a {
+	text-decoration:underline;
+	color:blue;
+	cursor:pointer;
+}
 .hide {
 	width:0px !important;
 }
