@@ -14,9 +14,29 @@
 <script type="text/javascript">
 jQuery(function($) {
 
+	function _getImageContainerSize(elementId) {
+		var elem = $("#"+elementId);
+		var elem_width = elem.width();
+		var elem_height = elem.height();
+		
+	return {width: elem_width, height: elem_height};
+	};
+
+	_enableZoom = function () {
+		isZoomActive = true;
+
+		$('#cm-image img').css('display', 'none');
+		$('#nav-screen').css('display', 'block');
+
+		var cheight = _getImageContainerSize('cm-image').height;
+		var cwidth = _getImageContainerSize('cm-image').width;
+		$('#nav-screen-img').elevateZoom({zoomWindowPosition: "cm-image", zoomWindowHeight: cheight, zoomWindowWidth: cwidth, borderSize: 0});
+	};
+
 	$(document).ready(function(){
 
 		var gallery = $('#catalog-main').adGallery(); 
+		isZoomActive = false;
 
 		$('#cct-page').click(function() {
 			$('#cm-thumbs').toggleClass('hide');
@@ -26,42 +46,23 @@ jQuery(function($) {
 			$('#cm-content-list').toggleClass('hide');
 		});
 
-		$('#page-slider').slider();
+		$('#cct-close').click(function() {
+			$('#cm-thumbs').addClass('hide');
+			$('#cm-content-list').addClass('hide');
+		});
 
-		var isZoomActive = false;
+		$('#page-slider').slider();
 
 		$('#mw-zoomin').click(function() {
 			if (!isZoomActive) {
-				isZoomActive = true;
-				/*
-				$('div.cm-image img').each(function() {
-					var width = $(this).width();
-					var height = $(this).height();
-					var ratio = 2;
-
-					$(this).css('width', width * ratio);
-					$(this).css('height', height * ratio);
-				});
-				*/
-				$('div.cm-image img').css('display', 'none');
-				$('#nav-screen').css('display', 'block');
-				$('#nav-screen-img').elevateZoom();
+				_enableZoom();
 			}
 		});
 		$('#mw-zoomout').click(function() {
 			if (isZoomActive) {
 				isZoomActive = false;
-				/*
-				$('div.cm-image img').each(function() {
-					var width = $(this).width();
-					var height = $(this).height();
-					var ratio = 2;
 
-					$(this).css('width', width / ratio);
-					$(this).css('height', height / ratio);
-				});
-				*/
-				$('div.cm-image img').css('display', 'block');
+				$('#cm-image img').css('display', 'block');
 				$('#nav-screen').css('display', 'none');
 				$('div.zoomLens').remove();
 				$('div.zoomWindowContainer').remove();
@@ -106,9 +107,6 @@ jQuery(function($) {
 		<div class="clear"></div>
 	</div>
 
-	<div id="nav-screen">
-		<img id="nav-screen-img">
-	</div>
 	<div id="catalog-main">
 		<div id="cm-image-wrapper">&nbsp;</div>
 		<div id="catalog-table-contents">
@@ -135,4 +133,8 @@ jQuery(function($) {
 			</div>
 		</div>
 			<div class="clear"></div>
+
+	<div id="nav-screen" style="z-index:9999">
+		<img id="nav-screen-img">
+	</div>
 	</div>
