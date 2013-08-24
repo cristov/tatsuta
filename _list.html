@@ -13,6 +13,7 @@
 
 <script type="text/javascript">
 jQuery(function($) {
+	isZoomActive = false;
 
 	$(document).ready(function(){
 
@@ -27,8 +28,6 @@ jQuery(function($) {
 		});
 
 		$('#page-slider').slider();
-
-		var isZoomActive = false;
 
 		$('#mw-zoomin').click(function() {
 			if (!isZoomActive) {

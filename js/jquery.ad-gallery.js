@@ -322,6 +322,11 @@
       var context = this;
       link.click(
         function() {
+			 isZoomActive = false;
+			 $('#nav-screen').css('display', 'none');
+			 $('div.zoomLens').remove();
+			 $('div.zoomWindowContainer').remove();
+
           context.showImage(link.data("ad-i"));
           context.slideshow.stop();
           return false;
