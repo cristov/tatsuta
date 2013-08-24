@@ -175,14 +175,14 @@ li {
 	width:30px;
 	height:30px;
 }
-.cm-image{
+#cm-image{
 	padding-top:90px;
 	width:90%;
 	height:100%;
 	margin-left:auto;
 	margin-right:auto;
 }
-.cm-image img {
+#cm-image img {
 	width:100%;
 	min-height:40%;
 	min-width:40%;
