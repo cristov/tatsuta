@@ -139,6 +139,7 @@ li {
 #cm-content-list li {
 	margin-top:5px;
 	margin-bottom:5px;
+	width:100%;
 }
 .hide {
 	width:0px !important;
