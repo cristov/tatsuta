@@ -19,7 +19,7 @@
                      width: false,
                      height: false,
                      display_next_and_prev: true,
-                     display_back_and_forward: false,
+                     display_back_and_forward: true,
                      scroll_jump: 0, // If 0, it jumps the width of the container
                      slideshow: {
                        enable: true,
@@ -157,6 +157,7 @@
     current_image: false,
     current_description: false,
     nav_display_width: 0,
+    nav_display_height: 0,
     settings: false,
     images: false,
     in_transition: false,
@@ -181,6 +182,7 @@
         this.image_wrapper_height = this.image_wrapper.height();
       };
       this.nav_display_width = this.nav.width();
+      this.nav_display_height = this.nav.height();
       this.current_index = -1;
       this.current_image = false;
       this.current_description = false;
@@ -536,19 +538,19 @@
         function() {
           // We don't want to jump the whole width, since an image
           // might be cut at the edge
-          var width = context.nav_display_width - 50;
+          var height = context.nav_display_height - 50;
           if(context.settings.scroll_jump > 0) {
-            var width = context.settings.scroll_jump;
+            var height = context.settings.scroll_jump;
           };
           if($(this).is('.ad-forward')) {
-            var left = context.thumbs_wrapper.scrollLeft() + width;
+            var sTop = context.thumbs_wrapper.scrollTop() + height;
           } else {
-            var left = context.thumbs_wrapper.scrollLeft() - width;
+            var sTop = context.thumbs_wrapper.scrollTop() - height;
           };
           if(context.settings.slideshow.stop_on_scroll) {
             context.slideshow.stop();
           };
-          context.thumbs_wrapper.animate({scrollLeft: left +'px'});
+          context.thumbs_wrapper.animate({scrollTop: sTop +'px'});
           return false;
         }
       ).css('opacity', 0.6).hover(
@@ -564,11 +566,11 @@
               if(has_scrolled > 30 && context.settings.slideshow.stop_on_scroll) {
                 context.slideshow.stop();
               };
-              var left = context.thumbs_wrapper.scrollLeft() + 1;
+              var left = context.thumbs_wrapper.scrollTop() + 1;
               if(direction == 'left') {
-                left = context.thumbs_wrapper.scrollLeft() - 1;
+                left = context.thumbs_wrapper.scrollTop() - 1;
               };
-              context.thumbs_wrapper.scrollLeft(left);
+              context.thumbs_wrapper.scrollTop(left);
             },
             10
           );
