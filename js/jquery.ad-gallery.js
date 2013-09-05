@@ -528,8 +528,8 @@
     },
     initBackAndForward: function() {
       var context = this;
-      this.scroll_forward = $('<div class="ad-forward"></div>');
-      this.scroll_back = $('<div class="ad-back"></div>');
+      this.scroll_forward = $('<div class="ad-forward hide"></div>');
+      this.scroll_back = $('<div class="ad-back hide"></div>');
       this.nav.append(this.scroll_forward);
       this.nav.prepend(this.scroll_back);
       var has_scrolled = 0;

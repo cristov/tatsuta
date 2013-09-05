@@ -40,7 +40,7 @@ jQuery(function($) {
 		isZoomActive = false;
 
 		$('#cct-page').click(function() {
-			$('#cm-thumbs').toggleClass('hide');
+			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
 		});
 
 		$('#cct-list').click(function() {
@@ -48,7 +48,7 @@ jQuery(function($) {
 		});
 
 		$('#cct-close').click(function() {
-			$('#cm-thumbs').addClass('hide');
+			$('#cm-thumbs, .ad-back, .ad-forward').addClass('hide');
 			$('#cm-contents').addClass('hide');
 		});
 
