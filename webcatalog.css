@@ -117,14 +117,14 @@ li {
 	height:100px;
 	position:absolute;
 	z-index:10;
-	background: url(modules/board/skins/xe_2010_gallery/img/prev.png) no-repeat;
+	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_up.png) no-repeat;
 }
 #catalog-table-contents .ad-forward {
 	width:150px;
 	height:100px;
 	position:absolute;
 	z-index:10;
-	background: url(modules/board/skins/xe_2010_gallery/img/next.png) no-repeat;
+	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_down.png) no-repeat;
 	bottom:10px;
 }
 #catalog-content-tab {
