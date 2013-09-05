@@ -178,12 +178,18 @@ li {
  	background-image:url(img/prev.png);
 	width:50px;
 	height:50px;
+	left:10px;
+	top:50%;
+	position:absolute;
 }
 #cm-next { 
  	background-image:url(img/next.png);
 	width:50px;
 	height:50px;
-	}
+	right:10px;
+	top:50%;
+	position:absolute;
+}
 #cm-loader {
 	position:absolute;
 	top:48%;
