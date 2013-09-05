@@ -106,28 +106,28 @@ li {
 }
 #catalog-table-contents {
 	top:0;
+	bottom:0;
 	position:fixed;
-	padding-top:70px;
+	margin-top:70px;
 	float:left;
-	height:100%;
+	height:auto;
 	overflow:hidden;
 }
-#catalog-table-contents .ad-back {
-	width:20px;
-	height:20px;
-	left:65px;
-	position:absolute;
-	z-index:10;
-	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_up.png) no-repeat;
-}
+#catalog-table-contents .ad-back,
 #catalog-table-contents .ad-forward {
 	width:20px;
 	height:20px;
 	left:65px;
 	position:absolute;
 	z-index:10;
+	cursor:pointer;
+}
+#catalog-table-contents .ad-back {
+	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_up.png) no-repeat;
+}
+#catalog-table-contents .ad-forward {
+	bottom:0;
 	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_down.png) no-repeat;
-	bottom:10px;
 }
 #catalog-content-tab {
 	float:left;
