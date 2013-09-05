@@ -113,15 +113,17 @@ li {
 	overflow:hidden;
 }
 #catalog-table-contents .ad-back {
-	width:150px;
-	height:100px;
+	width:20px;
+	height:20px;
+	left:65px;
 	position:absolute;
 	z-index:10;
 	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_up.png) no-repeat;
 }
 #catalog-table-contents .ad-forward {
-	width:150px;
-	height:100px;
+	width:20px;
+	height:20px;
+	left:65px;
 	position:absolute;
 	z-index:10;
 	background: url(modules/board/skins/xe_2010_gallery/img/ad_scroll_down.png) no-repeat;
@@ -165,6 +167,7 @@ li {
 	width:0px !important;
 }
 #cm-image-wrapper {
+	overflow:hidden;
 	position:relative;
 	margin-left:auto;
 	margin-right:auto;
