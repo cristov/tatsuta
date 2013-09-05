@@ -159,8 +159,6 @@ if ( typeof Object.create !== 'function' ) {
 
 				//lens style for window zoom
 				if(self.options.zoomType == "window") {
-
-
 					// adjust images less than the window height
 					if(self.nzHeight < self.options.zoomWindowWidth/self.widthRatio){
 						lensHeight = self.nzHeight;              
@@ -174,7 +172,6 @@ if ( typeof Object.create !== 'function' ) {
 					else{
 						lensWidth =  (self.options.zoomWindowWidth/self.widthRatio);
 					}
-
 
 					self.lensStyle = "background-position: 0px 0px;width: " + String((self.options.zoomWindowWidth)/self.widthRatio) + "px;height: " + String((self.options.zoomWindowHeight)/self.heightRatio)
 					+ "px;float: right;display: none;"
@@ -190,7 +187,6 @@ if ( typeof Object.create !== 'function' ) {
 					" solid "+(self.options.lensBorderColour)+";background-repeat: no-repeat;position: absolute;";
 				} 
 
-
 				//tint style
 				self.tintStyle = "display: block;"
 					+ "position: absolute;"
@@ -204,19 +200,14 @@ if ( typeof Object.create !== 'function' ) {
 
 				//lens style for lens zoom with optional round for modern browsers
 				self.lensRound = '';
-
 				if(self.options.zoomType == "lens") {
-
 					self.lensStyle = "background-position: 0px 0px;"
 						+ "float: left;display: none;"
 						+ "border: " + String(self.options.borderSize) + "px solid " + self.options.borderColour+";"
 						+ "width:"+ String(self.options.lensSize) +"px;"
 						+ "height:"+ String(self.options.lensSize)+"px;"
 						+ "background-repeat: no-repeat;position: absolute;";
-
-
 				}
-
 
 				//does not round in all browsers
 				if(self.options.lensShape == "round") {
@@ -224,12 +215,10 @@ if ( typeof Object.create !== 'function' ) {
 					+ "border-top-right-radius: " + String(self.options.lensSize / 2 + self.options.borderSize) + "px;"
 					+ "border-bottom-left-radius: " + String(self.options.lensSize / 2 + self.options.borderSize) + "px;"
 					+ "border-bottom-right-radius: " + String(self.options.lensSize / 2 + self.options.borderSize) + "px;";
-
 				}
 
 				//create the div's                                                + ""
 				//self.zoomContainer = $('<div/>').addClass('zoomContainer').css({"position":"relative", "height":self.nzHeight, "width":self.nzWidth});
-
 				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;"></div>');
 				$('body').append(self.zoomContainer);	
 
@@ -251,25 +240,17 @@ if ( typeof Object.create !== 'function' ) {
 				if(self.options.tint) {
 					self.tintContainer = $('<div/>').addClass('tintContainer');	
 					self.zoomTint = $("<div class='zoomTint' style='"+self.tintStyle+"'></div>");
-
-
 					self.zoomLens.wrap(self.tintContainer);
-
-
 					self.zoomTintcss = self.zoomLens.after(self.zoomTint);	
 
 					//if tint enabled - set an image to show over the tint
-
 					self.zoomTintImage = $('<img style="position: absolute; left: 0px; top: 0px; max-width: none; width: '+self.nzWidth+'px; height: '+self.nzHeight+'px;" src="'+self.imageSrc+'">')
 					.appendTo(self.zoomLens)
 					.click(function () {
 
-						self.$elem.trigger('click');
+					self.$elem.trigger('click');
 					});
-
 				}
-
-
 
 				//create zoom window 
 				if(isNaN(self.options.zoomWindowPosition)){
@@ -288,10 +269,6 @@ if ( typeof Object.create !== 'function' ) {
 				}              
 				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
 				self.zoomWindow.wrap(self.zoomWindowContainer);
-
-
-				//  self.captionStyle = "text-align: left;background-color: black;color: white;font-weight: bold;padding: 10px;font-family: sans-serif;font-size: 11px";                                                                                                                                                                                                                                          
-				// self.zoomCaption = $('<div class="elevatezoom-caption" style="'+self.captionStyle+'display: block; width: 280px;">INSERT ALT TAG</div>').appendTo(self.zoomWindow.parent());
 
 				if(self.options.zoomType == "lens") {
 					self.zoomLens.css({ backgroundImage: "url('" + self.imageSrc + "')" }); 
@@ -1488,9 +1465,6 @@ if ( typeof Object.create !== 'function' ) {
 				}
 
 				if(scrcontinue){
-
-
-
 					self.zoomLock = 0;
 					self.changeZoom = true;
 

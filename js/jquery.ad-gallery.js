@@ -395,12 +395,12 @@
 		$('#mw-prev-page').click(function() {
 			context.prevImage();
 			context.slideshow.stop();	
-			if(isZoomActive) {_enableZoom();};
+			if(isZoomActive) resetZoom();
 		});
 		$('#mw-next-page').click(function() {
 			context.nextImage();
 			context.slideshow.stop();	
-			if(isZoomActive) {_enableZoom();};
+			if(isZoomActive) resetZoom();
 		});
 		
 	},
