@@ -506,13 +506,11 @@
       var context = this;
       this.prev_link.add(this.next_link).mouseover(
         function(e) {
-          // IE 6 hides the wrapper div, so we have to set it's width
-          $(this).css('height', context.image_wrapper_height);
-          $(this).find('div').show();
+          $(this).css('opacity', 1);
         }
       ).mouseout(
         function(e) {
-          $(this).find('div').hide();
+          $(this).css('opacity', 0.3);
         }
       ).click(
         function() {
@@ -524,7 +522,7 @@
             context.slideshow.stop();
           };
         }
-      ).find('div').css('opacity', 0.7);
+      ).css('opacity', 0.3);
     },
     initBackAndForward: function() {
       var context = this;
