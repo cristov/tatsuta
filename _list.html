@@ -12,8 +12,14 @@
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 <script type="text/javascript">
+slider_arr = new Array();
+
+<!--@foreach($document_list as $key => $value)-->
+		slider_arr.unshift({$value->document_srl});
+<!--@end-->
+
+
 jQuery(function($) {
-	window.resizeTo ( 500, 500 );
 	isZoomActive = false;
 	zoom = new Object();
 	enableZoom = function () {
@@ -72,7 +78,16 @@ jQuery(function($) {
 			$('#cm-contents').addClass('hide');
 		});
 
-		$('#page-slider').slider();
+		$('#page-slider').slider({
+			min: 0,
+			max: slider_arr.length - 1,
+			change: function( event, ui) {
+				var data = slider_arr[ui.value];
+				$('a#' + data).trigger('click');
+
+				$('input[name="pagenation"]').val(ui.value + 1);
+			}
+		});
 
 		$('#mw-zoomin').click(function() {
 			if (!isZoomActive) {
