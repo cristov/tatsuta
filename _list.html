@@ -4,6 +4,8 @@
 	if (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
 	
 	$mi->thumbnail_type = 'ratio';
+
+	$slider_js = json_encode($document_list);
 }
 <load target="webcatalog.css" />
 <load target="js/jquery.elevatezoom.js" />
@@ -12,12 +14,22 @@
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 <script type="text/javascript">
+/*
 slider_arr = new Array();
 
 <!--@foreach($document_list as $key => $value)-->
 		slider_arr.unshift({$value->document_srl});
 <!--@end-->
+*/
 
+var slider_arr = new Array();
+//var slider_json = <?php echo $slider_js; ?>;
+var slider_js = {$slider_js};
+for (var i in slider_js) {
+	var doc = slider_js[i];
+	slider_arr.unshift(doc.document_srl);
+}
+slider_arr.sort();
 
 jQuery(function($) {
 	isZoomActive = false;
