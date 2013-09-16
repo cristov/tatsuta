@@ -14,16 +14,7 @@
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 <script type="text/javascript">
-/*
-slider_arr = new Array();
-
-<!--@foreach($document_list as $key => $value)-->
-		slider_arr.unshift({$value->document_srl});
-<!--@end-->
-*/
-
 var slider_arr = new Array();
-//var slider_json = <?php echo $slider_js; ?>;
 var slider_js = {$slider_js};
 for (var i in slider_js) {
 	var doc = slider_js[i];
@@ -73,6 +64,8 @@ jQuery(function($) {
 	};
 
 	$(document).ready(function(){
+
+		$('span#pagecount').text('/ ' + slider_arr.length);
 
 		var gallery = $('#catalog-main').adGallery(); 
 		isZoomActive = false;
@@ -133,7 +126,7 @@ jQuery(function($) {
 		<ul class="mw-sub">
 			<li id="mw-start-page" class="nav-btn"><img src="img/btn_prev02.png"></li>
 			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
-			<div id="mw-input-pagenum"><input type="text"name="pagenation"><span>/ 740</span></div>
+			<div id="mw-input-pagenum"><input type="text"name="pagenation"><span id="pagecount"></span></div>
 			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
 			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
 			<li id="mw-end-page" class="nav-btn"><img src="img/btn_next02.png"></li>
