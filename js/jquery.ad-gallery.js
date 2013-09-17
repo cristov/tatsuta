@@ -515,11 +515,9 @@
       ).click(
         function() {
           if($(this).is('#cm-next')) {
-            context.nextImage();
-            context.slideshow.stop();
+				$('#mw-next-page').trigger('click');
           } else {
-            context.prevImage();
-            context.slideshow.stop();
+				$('#mw-prev-page').trigger('click');
           };
         }
       ).css('opacity', 0.3);
