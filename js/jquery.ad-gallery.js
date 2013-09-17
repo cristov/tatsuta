@@ -394,6 +394,11 @@
 			context.firstImage();
 			context.slideshow.stop();
 		});
+		$('#mw-go').click(function() {
+	      var page = $('input[name="pagenation"]').val();
+	      context.showImage(page-1);
+			if(isZoomActive) resetZoom();
+		});
 		$('#mw-prev-page').click(function() {
 			context.prevImage();
 			context.slideshow.stop();	
@@ -682,7 +687,7 @@
      */
     _showWhenLoaded: function(index, callback) {
       if(this.images[index]) {
-		  $('input[name="pagenation"]').val(this.images.length - index);
+		  $('input[name="pagenation"]').val(index+1);
 
         var context = this;
         var image = this.images[index];

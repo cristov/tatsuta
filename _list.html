@@ -7,8 +7,6 @@
 
 	$slider_js = json_encode($document_list);
 }
-<?=json_encode("$document_list");?>
-	
 <load target="webcatalog.css" />
 <load target="js/jquery.elevatezoom.js" />
 <load target="js/jquery.ad-gallery.js" />
@@ -22,36 +20,35 @@ FullScreen JavaScript API
 Assumes Mozilla naming conventions instead of W3C for now
 */
 (function() {
-var 
-fullScreenApi = { 
- supportsFullScreen: false,
- isFullScreen: function() { return false; }, 
- requestFullScreen: function() {}, 
- cancelFullScreen: function() {},
- fullScreenEventName: '',
- prefix: ''
-},
-browserPrefixes = 'webkit moz o ms khtml'.split(' ');
-
-// check for native support
-if (typeof document.cancelFullScreen != 'undefined') {
-fullScreenApi.supportsFullScreen = true;
-} else {	 
-// check for fullscreen support by vendor prefix
-for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
- fullScreenApi.prefix = browserPrefixes[i];
- 
- if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
-	 fullScreenApi.supportsFullScreen = true;
-	 
-	 break;
- }
-}
-}
+var fullScreenApi = { 
+		supportsFullScreen: false,
+		isFullScreen: function() { return false; }, 
+		requestFullScreen: function() {}, 
+		cancelFullScreen: function() {},
+		fullScreenEventName: '',
+		prefix: ''
+	},
+	browserPrefixes = 'webkit moz o ms khtml'.split(' ');
+	
+	// check for native support
+	if (typeof document.cancelFullScreen != 'undefined') {
+		fullScreenApi.supportsFullScreen = true;
+	} else {	 
+	// check for fullscreen support by vendor prefix
+		for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
+			fullScreenApi.prefix = browserPrefixes[i];
+		 
+			if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
+			 fullScreenApi.supportsFullScreen = true;
+			 
+			 break;
+			}
+		}
+	}
 
 // update methods to do something useful
 if (fullScreenApi.supportsFullScreen) {
-fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
+	fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
 
 fullScreenApi.isFullScreen = function() {
  switch (this.prefix) {	
@@ -87,18 +84,22 @@ jQuery.fn.requestFullScreen = function() {
 // export api
 window.fullScreenApi = fullScreenApi;	
 })();
+
+// slider section
 var slider_arr = new Array();
 var slider_js = {$slider_js};
-for (var i in slider_js) {
+	for (var i in slider_js) {
 var doc = slider_js[i];
-slider_arr.unshift(doc.document_srl);
+	slider_arr.unshift(doc.document_srl);
 }
 slider_arr.sort();
+slider_arr.reverse();
 
 jQuery(function($) {
-isZoomActive = false;
-zoom = new Object();
-enableZoom = function () {
+	isZoomActive = false;
+	zoom = new Object();
+	enableZoom = function () {
+
 $('#cm-image img').css('display', 'none');
 $('#nav-screen').css('display', 'block');
 
@@ -207,7 +208,7 @@ $('span.cm-content-a').click(function() {
 		<ul class="mw-sub">
 			<li id="mw-start-page" class="nav-btn"><img src="img/btn_prev02.png"></li>
 			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
-			<div id="mw-input-pagenum"><input type="text"name="pagenation"><span id="pagecount"></span></div>
+			<div id="mw-input-pagenum"><input type="text" name="pagenation"><span id="pagecount"></span></div>
 			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
 			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
 			<li id="mw-end-page" class="nav-btn"><img src="img/btn_next02.png"></li>
