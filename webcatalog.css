@@ -181,6 +181,7 @@ li {
 	left:10px;
 	top:50%;
 	position:absolute;
+	z-index:10;
 }
 #cm-next { 
  	background-image:url(img/next.png);
@@ -189,6 +190,7 @@ li {
 	right:10px;
 	top:50%;
 	position:absolute;
+	z-index:10;
 }
 #cm-loader {
 	position:absolute;
