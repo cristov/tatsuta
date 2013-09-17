@@ -684,6 +684,8 @@
      */
     _showWhenLoaded: function(index, callback) {
       if(this.images[index]) {
+		  $('input[name="pagenation"]').val(this.images.length - index);
+
         var context = this;
         var image = this.images[index];
         var img_container = $(document.createElement('div')).attr('id','cm-image');
