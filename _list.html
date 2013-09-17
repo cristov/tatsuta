@@ -5,6 +5,8 @@
 	
 	$mi->thumbnail_type = 'ratio';
 }
+<?=json_encode("$document_list");?>
+	
 <load target="webcatalog.css" />
 <load target="js/jquery.elevatezoom.js" />
 <load target="js/jquery.ad-gallery.js" />
@@ -12,8 +14,79 @@
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 <script type="text/javascript">
+/* 
+FullScreen JavaScript API
+-------------
+Assumes Mozilla naming conventions instead of W3C for now
+*/
+(function() {
+	var 
+		fullScreenApi = { 
+			supportsFullScreen: false,
+			isFullScreen: function() { return false; }, 
+			requestFullScreen: function() {}, 
+			cancelFullScreen: function() {},
+			fullScreenEventName: '',
+			prefix: ''
+		},
+		browserPrefixes = 'webkit moz o ms khtml'.split(' ');
+	
+	// check for native support
+	if (typeof document.cancelFullScreen != 'undefined') {
+		fullScreenApi.supportsFullScreen = true;
+	} else {	 
+		// check for fullscreen support by vendor prefix
+		for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
+			fullScreenApi.prefix = browserPrefixes[i];
+			
+			if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
+				fullScreenApi.supportsFullScreen = true;
+				
+				break;
+			}
+		}
+	}
+	
+	// update methods to do something useful
+	if (fullScreenApi.supportsFullScreen) {
+		fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
+		
+		fullScreenApi.isFullScreen = function() {
+			switch (this.prefix) {	
+				case '':
+					return document.fullScreen;
+				case 'webkit':
+					return document.webkitIsFullScreen;
+				default:
+					return document[this.prefix + 'FullScreen'];
+			}
+		}
+		fullScreenApi.requestFullScreen = function(el) {
+			return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
+		}
+		fullScreenApi.cancelFullScreen = function(el) {
+			return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
+		}		
+	}
+
+	// jQuery plugin
+	if (typeof jQuery != 'undefined') {
+		jQuery.fn.requestFullScreen = function() {
+	
+			return this.each(function() {
+				var el = jQuery(this);
+				if (fullScreenApi.supportsFullScreen) {
+					fullScreenApi.requestFullScreen(el);
+				}
+			});
+		};
+	}
+
+	// export api
+	window.fullScreenApi = fullScreenApi;	
+})();
+
 jQuery(function($) {
-	window.resizeTo ( 500, 500 );
 	isZoomActive = false;
 	zoom = new Object();
 	enableZoom = function () {
@@ -55,7 +128,6 @@ jQuery(function($) {
 	};
 
 	$(document).ready(function(){
-
 		var gallery = $('#catalog-main').adGallery(); 
 		isZoomActive = false;
 
@@ -73,6 +145,11 @@ jQuery(function($) {
 		});
 
 		$('#page-slider').slider();
+
+		$('#mw-fullscreen').click(function() {
+			var elem = $('#catalog-main');
+			fullScreenApi.requestFullScreen(elem);
+		});
 
 		$('#mw-zoomin').click(function() {
 			if (!isZoomActive) {
