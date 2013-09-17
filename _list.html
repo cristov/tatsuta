@@ -86,11 +86,14 @@ jQuery(function($) {
 		$('#page-slider').slider({
 			min: 0,
 			max: slider_arr.length - 1,
-			change: function( event, ui) {
+			change: function( event, ui ) {
 				var data = slider_arr[ui.value];
 				$('a#' + data).trigger('click');
-
-				$('input[name="pagenation"]').val(ui.value + 1);
+			},
+			create: function( event, ui ) {
+				var id = window.location.hash.replace(/^#ad-image-/g, '');
+				var index = slider_arr.indexOf(id);
+				$(this).slider('option', 'value', index);
 			}
 		});
 
