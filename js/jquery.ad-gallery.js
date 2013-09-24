@@ -394,6 +394,10 @@
 			context.firstImage();
 			context.slideshow.stop();
 		});
+		$('#mw-end-page').click(function() {
+			context.endImage();
+			context.slideshow.stop();
+		});
 		$('#mw-go').click(function() {
 	      var page = $('input[name="pagenation"]').val();
 	      context.showImage(page-1);
@@ -812,9 +816,9 @@
       return true;
     },
 	 endImage: function(callback) {
-		var end = 1;
-		this.preloadImage(end + 1);
-		this.showImage(end, callback);
+		var end = this.images.length;
+		this.preloadImage(0);
+		this.showImage(end - 1, callback);
 		return true;
 	},
     preloadAll: function() {
