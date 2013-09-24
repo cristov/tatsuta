@@ -20,7 +20,7 @@ FullScreen JavaScript API
 Assumes Mozilla naming conventions instead of W3C for now
 */
 (function() {
-var fullScreenApi = { 
+	var fullScreenApi = { 
 		supportsFullScreen: false,
 		isFullScreen: function() { return false; }, 
 		requestFullScreen: function() {}, 
@@ -46,50 +46,50 @@ var fullScreenApi = {
 		}
 	}
 
-// update methods to do something useful
-if (fullScreenApi.supportsFullScreen) {
-	fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
+	// update methods to do something useful
+	if (fullScreenApi.supportsFullScreen) {
+		fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
 
-fullScreenApi.isFullScreen = function() {
- switch (this.prefix) {	
-	 case '':
-		 return document.fullScreen;
-	 case 'webkit':
-		 return document.webkitIsFullScreen;
-	 default:
-		 return document[this.prefix + 'FullScreen'];
- }
-}
-fullScreenApi.requestFullScreen = function(el) {
- return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
-}
-fullScreenApi.cancelFullScreen = function(el) {
- return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
-}		
-}
+		fullScreenApi.isFullScreen = function() {
+			switch (this.prefix) {	
+				case '':
+					return document.fullScreen;
+				case 'webkit':
+					return document.webkitIsFullScreen;
+				default:
+					return document[this.prefix + 'FullScreen'];
+			}
+		}
+		fullScreenApi.requestFullScreen = function(el) {
+			return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
+		}
+		fullScreenApi.cancelFullScreen = function(el) {
+			return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
+		}	
 
-// jQuery plugin
-if (typeof jQuery != 'undefined') {
-jQuery.fn.requestFullScreen = function() {
+		// jQuery plugin
+		if (typeof jQuery != 'undefined') {
+			jQuery.fn.requestFullScreen = function() {
 
- return this.each(function() {
-	 var el = jQuery(this);
-	 if (fullScreenApi.supportsFullScreen) {
-		 fullScreenApi.requestFullScreen(el);
-	 }
- });
-};
-}
+				return this.each(function() {
+					var el = jQuery(this);
+					if (fullScreenApi.supportsFullScreen) {
+						fullScreenApi.requestFullScreen(el);
+					}
+				});
+			};
+		}
 
-// export api
-window.fullScreenApi = fullScreenApi;	
+		// export api
+		window.fullScreenApi = fullScreenApi;	
+	}
 })();
 
 // slider section
 var slider_arr = new Array();
 var slider_js = {$slider_js};
-	for (var i in slider_js) {
-var doc = slider_js[i];
+for (var i in slider_js) {
+	var doc = slider_js[i];
 	slider_arr.unshift(doc.document_srl);
 }
 slider_arr.sort();
@@ -99,106 +99,104 @@ jQuery(function($) {
 	isZoomActive = false;
 	zoom = new Object();
 	enableZoom = function () {
+		$('#cm-image img').css('display', 'none');
+		$('#nav-screen').css('display', 'block');
 
-$('#cm-image img').css('display', 'none');
-$('#nav-screen').css('display', 'block');
+		var cheight = _getImageContainerSize('cm-image').height;
+		var cwidth = _getImageContainerSize('cm-image').width;
 
-var cheight = _getImageContainerSize('cm-image').height;
-var cwidth = _getImageContainerSize('cm-image').width;
+		zoom = $('#nav-screen-img');
+		zoom.elevateZoom({zoomWindowPosition: "cm-image", zoomWindowHeight: cheight, zoomWindowWidth: cwidth, borderSize: 0});
 
-zoom = $('#nav-screen-img');
-zoom.elevateZoom({zoomWindowPosition: "cm-image", zoomWindowHeight: cheight, zoomWindowWidth: cwidth, borderSize: 0});
+		isZoomActive = true;
+		return isZoomActive;
+	};
+	disableZoom = function () {
+		var result = true;
+		$('#cm-image img').css('display', 'block');
+		$('#nav-screen').css('display', 'none');
+		$('div.zoomLens').remove();
+		$('div.zoomWindowContainer').remove();
+		$('div.zoomContainer').remove();
 
-isZoomActive = true;
-return isZoomActive;
-};
-disableZoom = function () {
-var result = true;
-$('#cm-image img').css('display', 'block');
-$('#nav-screen').css('display', 'none');
-$('div.zoomLens').remove();
-$('div.zoomWindowContainer').remove();
-$('div.zoomContainer').remove();
+		isZoomActive = false;
+		return result;
+	};
+	resetZoom = function(){
+		disableZoom();
+		enableZoom();
+	};
 
-isZoomActive = false;
-return result;
-};
-resetZoom = function(){
-disableZoom();
-enableZoom();
-};
+	function _getImageContainerSize(elementId) {
+		var elem = $("#"+elementId);
+		var elem_width = elem.width();
+		var elem_height = elem.height();
 
+		return {width: elem_width, height: elem_height};
+	};
 
-function _getImageContainerSize(elementId) {
-var elem = $("#"+elementId);
-var elem_width = elem.width();
-var elem_height = elem.height();
+	$(document).ready(function(){
 
-return {width: elem_width, height: elem_height};
-};
+		$('span#pagecount').text('/ ' + slider_arr.length);
 
-$(document).ready(function(){
+		var gallery = $('#catalog-main').adGallery(); 
+		isZoomActive = false;
 
-$('span#pagecount').text('/ ' + slider_arr.length);
+		$('#cct-page').click(function() {
+			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
+		});
 
-var gallery = $('#catalog-main').adGallery(); 
-isZoomActive = false;
+		$('#cct-list').click(function() {
+			$('#cm-contents').toggleClass('hide');
+		});
 
-$('#cct-page').click(function() {
- $('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
-});
+		$('#cct-close').click(function() {
+			$('#cm-thumbs, .ad-back, .ad-forward').addClass('hide');
+			$('#cm-contents').addClass('hide');
+		});
 
-$('#cct-list').click(function() {
- $('#cm-contents').toggleClass('hide');
-});
+		$('#page-slider').slider({
+			min: 0,
+			max: slider_arr.length - 1,
+			change: function( event, ui ) {
+				var data = slider_arr[ui.value];
+				$('a#' + data).trigger('click');
+			},
+			create: function( event, ui ) {
+				var id = window.location.hash.replace(/^#ad-image-/g, '');
+				var index = slider_arr.indexOf(id);
+				$(this).slider('option', 'value', index);
+			}
+		});
 
-$('#cct-close').click(function() {
- $('#cm-thumbs, .ad-back, .ad-forward').addClass('hide');
- $('#cm-contents').addClass('hide');
-});
+		$('#mw-fullscreen').click(function() {
+			var elem = $('#catalog-main');
+			fullScreenApi.requestFullScreen(elem);
+		});
 
-$('#page-slider').slider({
- min: 0,
- max: slider_arr.length - 1,
- change: function( event, ui ) {
-	 var data = slider_arr[ui.value];
-	 $('a#' + data).trigger('click');
- },
- create: function( event, ui ) {
-	 var id = window.location.hash.replace(/^#ad-image-/g, '');
-	 var index = slider_arr.indexOf(id);
-	 $(this).slider('option', 'value', index);
- }
-});
-
-$('#mw-fullscreen').click(function() {
- var elem = $('#catalog-main');
- fullScreenApi.requestFullScreen(elem);
-});
-
-$('#mw-zoomin').click(function() {
- if (!isZoomActive) {
-	 enableZoom();
- }
-});
-$('#mw-zoomout').click(function() {
- if (isZoomActive) {
-	 isZoomActive = false;
-	 disableZoom();
- }
-});
-$('span.cm-content-a').click(function() {
- var data = $(this).attr('data');
- $('a#' + data).trigger('click');
-});
-});
+		$('#mw-zoomin').click(function() {
+			if (!isZoomActive) {
+				enableZoom();
+			}
+		});
+		$('#mw-zoomout').click(function() {
+			if (isZoomActive) {
+				isZoomActive = false;
+				disableZoom();
+			}
+		});
+		$('span.cm-content-a').click(function() {
+			var data = $(this).attr('data');
+			$('a#' + data).trigger('click');
+		});
+	});
 });
 </script>
 
 <div class="menu-wrapper">
-<div id="tatsuta"></div>
-<ul class="mw-sub">
- <li id="mw-pdfdown"><img src="img/btn_pdfdown.png"></li>
+	<div id="tatsuta"></div>
+		<ul class="mw-sub">
+			<li id="mw-pdfdown"><img src="img/btn_pdfdown.png"></li>
 		</ul>
 		<ul class="mw-sub">
 			<li id="mw-mail" class="nav-btn"><img src="img/btn_mail.png"></li>
@@ -257,9 +255,10 @@ $('span.cm-content-a').click(function() {
 				<img id="cct-close" src="img/tab03.png">
 			</div>
 		</div>
-			<div class="clear"></div>
+		<div class="clear"></div>
+	</div>
 
 	<div id="nav-screen" style="z-index:9999">
 		<img id="nav-screen-img">
 	</div>
-	</div>
+</div>
