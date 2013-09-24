@@ -39,9 +39,9 @@ Assumes Mozilla naming conventions instead of W3C for now
 			fullScreenApi.prefix = browserPrefixes[i];
 		 
 			if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
-			 fullScreenApi.supportsFullScreen = true;
+				fullScreenApi.supportsFullScreen = true;
 			 
-			 break;
+				break;
 			}
 		}
 	}
@@ -193,8 +193,8 @@ jQuery(function($) {
 });
 </script>
 
-<div class="menu-wrapper">
-	<div id="tatsuta"></div>
+	<div class="menu-wrapper">
+		<div id="tatsuta"></div>
 		<ul class="mw-sub">
 			<li id="mw-pdfdown"><img src="img/btn_pdfdown.png"></li>
 		</ul>
@@ -256,9 +256,8 @@ jQuery(function($) {
 			</div>
 		</div>
 		<div class="clear"></div>
-	</div>
 
-	<div id="nav-screen" style="z-index:9999">
-		<img id="nav-screen-img">
+		<div id="nav-screen" style="z-index:9999">
+			<img id="nav-screen-img">
+		</div>
 	</div>
-</div>
