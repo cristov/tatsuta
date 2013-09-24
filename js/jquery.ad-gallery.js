@@ -393,10 +393,12 @@
 		$('#mw-start-page').click(function() {
 			context.firstImage();
 			context.slideshow.stop();
+			if(isZoomActive) resetZoom();
 		});
 		$('#mw-end-page').click(function() {
 			context.endImage();
 			context.slideshow.stop();
+			if(isZoomActive) resetZoom();
 		});
 		$('#mw-go').click(function() {
 	      var page = $('input[name="pagenation"]').val();
