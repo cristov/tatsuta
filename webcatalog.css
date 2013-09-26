@@ -221,3 +221,6 @@ li {
 	display:absolute !important;
 	bottom:0;
 }
+#search-dialog {
+	display:none;
+}

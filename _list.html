@@ -189,6 +189,30 @@ jQuery(function($) {
 			var data = $(this).attr('data');
 			$('a#' + data).trigger('click');
 		});
+		$('#mw-pdfdown').click(function() {
+			$('#search-dialog').dialog({
+				modal: true
+			});
+		});
+		$('#sdf-button').click(function() {
+			var data = {
+				'mid': '{$mid}',
+				'search_keyword': $('#search_keyword').val(),
+				'search_target': $('#search_target option:selected').val(),
+				'act':'dispBoardContentList'
+			};
+			$.ajax({
+				type: 'POST',
+				url: '{getUrl()}',
+				data: data,
+				contentType: 'application/json'
+			}).done(function(msg) {
+				console.log('Done. ' + msg);
+				//data["oDocument"]["title"]
+			}).fail(function(msg) {
+				console.log('Fail. ' + msg);
+			});
+		});
 	});
 });
 </script>
@@ -259,5 +283,17 @@ jQuery(function($) {
 
 		<div id="nav-screen" style="z-index:9999">
 			<img id="nav-screen-img">
+		</div>
+	</div>
+
+	<div id="search-dialog">
+		<div id="sd-form">
+			<input type="text" id="search_keyword" value="{htmlspecialchars($search_keyword)}" title="{$lang->cmd_search}" class="iText" />
+			<select id="search_target">
+				<option loop="$search_option=>$key,$val" value="{$key}" selected="selected"|cond="$search_target==$key">{$val}</option>
+			</select>
+			<button id="sdf-button" class="btn" type="button">{$lang->cmd_search}</button>
+		</div>
+		<div id="sd-result">
 		</div>
 	</div>
