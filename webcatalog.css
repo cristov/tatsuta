@@ -224,3 +224,17 @@ li {
 #search-dialog {
 	display:none;
 }
+.sd-result-head {
+	background:#ccc;
+}
+.cell_1 {
+	width: 70%;
+	float: left;
+}
+.cell_2 {
+	width: 30%;
+	float: left;
+}
+.clear-both {
+	clear: both;
+}
