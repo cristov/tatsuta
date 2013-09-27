@@ -135,6 +135,17 @@ jQuery(function($) {
 		return {width: elem_width, height: elem_height};
 	};
 
+	clickTriger = function(obj) {
+		var data = $(obj).attr('data');
+		$('a#' + data).trigger('click');
+	}
+
+	initDialog = function() {
+		$('#search_keyword').val('');
+		$('#search_target option:eq(0)').attr('selected', 'selected');
+		$('#sd-result').empty();
+	}
+
 	$(document).ready(function(){
 
 		$('span#pagecount').text('/ ' + slider_arr.length);
@@ -186,21 +197,30 @@ jQuery(function($) {
 			}
 		});
 		$('span.cm-content-a').click(function() {
-			var data = $(this).attr('data');
-			$('a#' + data).trigger('click');
+			clickTriger(this);
 		});
 		$('#mw-pdfdown').click(function() {
 			$('#search-dialog').dialog({
 				modal: true,
 				draggable: false,
 				resizable: false,
-				hide: "explode",
-				title: "Dialog Title",
+				hide: 'explode',
+				title: '검색',
 				width: 400,
-				open: function( event, ui ) {}
+				height: 100,
+				maxHeight: 600,
+				position: {
+					at: 'top'
+				},
+				open: function( event, ui ) {},
+				close: function( event, ui ) {
+					initDialog();
+				}
 			});
 		});
 		$('#sdf-button').click(function() {
+			$('#sd-result').empty();
+
 			var data = {
 				'mid': '{$mid}',
 				'search_keyword': $('#search_keyword').val(),
@@ -214,23 +234,28 @@ jQuery(function($) {
 				contentType: 'application/json'
 			}).done(function(resp) {
 				console.log('Done. ' + resp);
+				$('#search-dialog').css('height', '100%');
 
 				var oResult = $('#sd-result');
-				var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
-				var oCell_nick = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('닉네임');
-				var oClear = $(document.createElement('div')).attr('class', 'clear-both');
-				oResult.append(oCell_title, oCell_nick, oClear);
-
 				var document_list = JSON.parse(resp).document_list; 
-				for (var i in document_list) {
-					var document_srl = document_list[i].document_srl;
-					var title = document_list[i].title;
-					var nick_name = document_list[i].nick_name;
-					var oCell_1 = $(document.createElement('span')).attr({class:'cell_1 cm-content-a', data: document_srl}).append(title);
-					var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(nick_name);
-					var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
+				if (document_list.length == 0) {
+					oResult.append('검색결과가 없습니다.');
+				} else {
+					var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
+					var oCell_nick = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('닉네임');
+					var oClear = $(document.createElement('div')).attr('class', 'clear-both');
+					oResult.append(oCell_title, oCell_nick, oClear);
 
-					oResult.append(oCell_1, oCell_2, oClear_both);
+					for (var i in document_list) {
+						var document_srl = document_list[i].document_srl;
+						var title = document_list[i].title;
+						var nick_name = document_list[i].nick_name;
+						var oCell_1 = $(document.createElement('span')).attr({class:'cell_1 cm-content-a', data: document_srl}).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
+						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(nick_name);
+						var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
+
+						oResult.append(oCell_1, oCell_2, oClear_both);
+					}
 				}
 			}).fail(function(msg) {
 				console.log('Fail. ' + msg);
@@ -317,6 +342,5 @@ jQuery(function($) {
 			</select>
 			<button id="sdf-button" class="btn" type="button">{$lang->cmd_search}</button>
 		</div>
-		<div id="sd-result" style="width:100%; height:100%; margin-top: 20px;">
-		</div>
+		<div id="sd-result"></div>
 	</div>

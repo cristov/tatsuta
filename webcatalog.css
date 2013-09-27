@@ -224,6 +224,10 @@ li {
 #search-dialog {
 	display:none;
 }
+#sd-result {
+	width:100%;
+	margin-top: 20px;
+}
 .sd-result-head {
 	background:#ccc;
 }
