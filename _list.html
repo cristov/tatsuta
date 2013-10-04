@@ -154,13 +154,6 @@ jQuery(function($) {
    	});
 	}
 
-	function _setDomControlForMSIE() {
-		if ($.browser.msie == true && $.browser.version == '7.0') {
-			$('#cm-thumbs').hide();
-			$('#cm-contents').hide();
-		}
-	}
-
 	$(window).resize(function(){
 		gallery.resize();
 	});
@@ -170,8 +163,6 @@ jQuery(function($) {
 		isZoomActive = false;
 
 		gallery = $('#catalog-main').adGallery(); 
-
-		_setDomControlForMSIE();
 
 		$('#cct-page').click(function() {
 			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
@@ -264,7 +255,7 @@ jQuery(function($) {
 				$('#search-dialog').css(sdCSS);
 
 				var oResult = $('#sd-result');
-				var document_list = $.parseJSON(resp).document_list;
+				var document_list = JSON.parse(resp).document_list; 
 				if (document_list.length == 0) {
 					oResult.append('검색결과가 없습니다.');
 				} else {
@@ -277,11 +268,7 @@ jQuery(function($) {
 						var document_srl = document_list[i].document_srl;
 						var title = document_list[i].title;
 						var content = document_list[i].content;
-
-						var oCell_1_attr = {};
-						oCell_1_attr['class'] = 'cell_1 cm-content-a';
-						oCell_1_attr['data'] = document_srl;
-						var oCell_1 = $(document.createElement('span')).attr(oCell_1_attr).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
+						var oCell_1 = $(document.createElement('span')).attr({class:'cell_1 cm-content-a', data: document_srl}).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
 						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(strip_tags(content));
 						var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
 
