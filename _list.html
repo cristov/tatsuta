@@ -146,12 +146,32 @@ jQuery(function($) {
 		$('#sd-result').empty();
 	}
 
+	strip_tags = function(input, allowed) {
+   	allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+   	var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+   	return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+			return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+   	});
+	}
+
+	function _setDomControlForMSIE() {
+		if ($.browser.msie == true && $.browser.version == '7.0') {
+			$('#cm-thumbs').hide();
+			$('#cm-contents').hide();
+		}
+	}
+
+	$(window).resize(function(){
+		gallery.resize();
+	});
+
 	$(document).ready(function(){
 
-		$('span#pagecount').text('/ ' + slider_arr.length);
-
-		var gallery = $('#catalog-main').adGallery(); 
 		isZoomActive = false;
+
+		gallery = $('#catalog-main').adGallery(); 
+
+		_setDomControlForMSIE();
 
 		$('#cct-page').click(function() {
 			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
@@ -175,10 +195,12 @@ jQuery(function($) {
 			},
 			create: function( event, ui ) {
 				var id = window.location.hash.replace(/^#ad-image-/g, '');
-				var index = slider_arr.indexOf(id);
+				var index = $.inArray(id, slider_arr);
 				$(this).slider('option', 'value', index);
 			}
 		});
+
+		$('span#pagecount').text('/ ' + slider_arr.length);
 
 		$('#mw-fullscreen').click(function() {
 			var elem = $('#catalog-main');
@@ -208,7 +230,6 @@ jQuery(function($) {
 				title: '검색',
 				width: 400,
 				height: 100,
-				maxHeight: 600,
 				position: {
 					at: 'top'
 				},
@@ -224,7 +245,7 @@ jQuery(function($) {
 			var data = {
 				'mid': '{$mid}',
 				'search_keyword': $('#search_keyword').val(),
-				'search_target': $('#search_target option:selected').val(),
+				'search_target': 'title_content',
 				'act': 'dispBoardContentList'
 			};
 			$.ajax({
@@ -234,24 +255,34 @@ jQuery(function($) {
 				contentType: 'application/json'
 			}).done(function(resp) {
 				console.log('Done. ' + resp);
-				$('#search-dialog').css('height', '100%');
+				var sdCSS = {
+					'height': '100%',
+					'max-height': '600px',
+					'overflow-x': 'hidden',
+					'overflow-y': 'scroll'
+				};
+				$('#search-dialog').css(sdCSS);
 
 				var oResult = $('#sd-result');
-				var document_list = JSON.parse(resp).document_list; 
+				var document_list = $.parseJSON(resp).document_list;
 				if (document_list.length == 0) {
 					oResult.append('검색결과가 없습니다.');
 				} else {
 					var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
-					var oCell_nick = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('닉네임');
+					var oCell_content = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('내용');
 					var oClear = $(document.createElement('div')).attr('class', 'clear-both');
-					oResult.append(oCell_title, oCell_nick, oClear);
+					oResult.append(oCell_title, oCell_content, oClear);
 
 					for (var i in document_list) {
 						var document_srl = document_list[i].document_srl;
 						var title = document_list[i].title;
-						var nick_name = document_list[i].nick_name;
-						var oCell_1 = $(document.createElement('span')).attr({class:'cell_1 cm-content-a', data: document_srl}).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
-						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(nick_name);
+						var content = document_list[i].content;
+
+						var oCell_1_attr = {};
+						oCell_1_attr['class'] = 'cell_1 cm-content-a';
+						oCell_1_attr['data'] = document_srl;
+						var oCell_1 = $(document.createElement('span')).attr(oCell_1_attr).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
+						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(strip_tags(content));
 						var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
 
 						oResult.append(oCell_1, oCell_2, oClear_both);
@@ -278,7 +309,7 @@ jQuery(function($) {
 		<ul class="mw-sub">
 			<li id="mw-start-page" class="nav-btn"><img src="img/btn_prev02.png"></li>
 			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
-			<div id="mw-input-pagenum"><input type="text" name="pagenation"><span id="pagecount"></span></div>
+			<div id="mw-input-pagenum"><input type="text" name="pagenation" style="width:40px;"><span id="pagecount"></span></div>
 			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
 			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
 			<li id="mw-end-page" class="nav-btn"><img src="img/btn_next02.png"></li>
@@ -340,9 +371,6 @@ jQuery(function($) {
 	<div id="search-dialog">
 		<div id="sd-form">
 			<input type="text" id="search_keyword" value="{htmlspecialchars($search_keyword)}" title="{$lang->cmd_search}" class="iText" />
-			<select id="search_target">
-				<option loop="$search_option=>$key,$val" value="{$key}" selected="selected"|cond="$search_target==$key">{$val}</option>
-			</select>
 			<button id="sdf-button" class="btn" type="button">{$lang->cmd_search}</button>
 		</div>
 		<div id="sd-result"></div>
