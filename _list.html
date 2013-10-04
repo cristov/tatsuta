@@ -255,13 +255,19 @@ jQuery(function($) {
 				contentType: 'application/json'
 			}).done(function(resp) {
 				console.log('Done. ' + resp);
-				var sdCSS = {
+
+				$('.ui-dialog').animate({
+					'width': '800px',
 					'height': '100%',
 					'max-height': '600px',
-					'overflow-x': 'hidden',
 					'overflow-y': 'scroll'
-				};
-				$('#search-dialog').css(sdCSS);
+				}, {
+					'duration': 500,
+					'step': function() {
+						$('#search-dialog').dialog('option', 'position', 'top');
+						$('#search-dialog').css('height', '90%');
+					}
+				});
 
 				var oResult = $('#sd-result');
 				var document_list = $.parseJSON(resp).document_list;
