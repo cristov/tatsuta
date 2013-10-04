@@ -59,7 +59,7 @@
     });
     // Sorry, breaking the jQuery chain because the gallery instances
     // are returned so you can fiddle with them
-    return galleries;
+    return galleries[0];
   };
 
   function VerticalSlideAnimation(img_container, direction, desc) {
@@ -711,10 +711,10 @@
         };
         this.image_wrapper.prepend(img_container);
         var size = this._getContainedImageSize(image.size.width, image.size.height);
-//        img.attr('width', size.width);
-//        img.attr('height', size.height);
-//        img_container.css({width: size.width +'px', height: size.height +'px'});
-//        this._centerImage(img_container, size.width, size.height);
+        img.attr('width', size.width);
+        img.attr('height', size.height);
+        img_container.css({width: size.width +'px', height: size.height +'px'});
+        this._centerImage(img_container, size.width, size.height);
         var desc = this._getDescription(image);
         if(desc) {
           if(!this.settings.description_wrapper && !this.settings.hooks.displayDescription) {
@@ -897,7 +897,12 @@
       if($.isFunction(fn)) {
         fn.call(this);
       };
-    }
+    },
+	resize: function(){
+	//alert(this.current_index);
+		this._showWhenLoaded(this.current_index);
+	}
+
   };
 
   function AdGallerySlideshow(nextimage_callback, settings) {
