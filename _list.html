@@ -162,7 +162,7 @@ jQuery(function($) {
 	}
 
 	$(window).resize(function(){
-		gallery.resize();
+		gallery = $('#catalog-main').adGallery(); 
 	});
 
 	$(document).ready(function(){
@@ -226,7 +226,7 @@ jQuery(function($) {
 				modal: true,
 				draggable: false,
 				resizable: false,
-				hide: 'explode',
+				//hide: 'explode',
 				title: '검색',
 				width: 400,
 				height: 100,
@@ -276,6 +276,7 @@ jQuery(function($) {
 				} else {
 					var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
 					var oCell_content = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('내용');
+					var oCell_thumbnale = new Image();
 					var oClear = $(document.createElement('div')).attr('class', 'clear-both');
 					oResult.append(oCell_title, oCell_content, oClear);
 
@@ -283,6 +284,10 @@ jQuery(function($) {
 						var document_srl = document_list[i].document_srl;
 						var title = document_list[i].title;
 						var content = document_list[i].content;
+		//				var thumbnal 
+
+
+
 
 						var oCell_1_attr = {};
 						oCell_1_attr['class'] = 'cell_1 cm-content-a';

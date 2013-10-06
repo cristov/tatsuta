@@ -618,18 +618,17 @@
      * If it's not, shrink it proportionally
      */
     _getContainedImageSize: function(image_width, image_height) {
-      if(image_height > this.image_wrapper_height) {
+		var iwh = this.image_wrapper_height - 110;
+      if(image_height > iwh) {
         var ratio = image_width / image_height;
-        image_height = this.image_wrapper_height;
-        image_width = this.image_wrapper_height * ratio;
+        image_height = iwh;
+        image_width = iwh * ratio;
       };
       if(image_width > this.image_wrapper_width) {
   	    var ratio = image_height / image_width;
   	    image_width = this.image_wrapper_width;
   	    image_height = this.image_wrapper_width * ratio;
   	  };
-	  	 image_width = image_width * 0.95;
-	  	 image_height = image_height * 0.95;
       return {width: image_width, height: image_height};
     },
     /**
@@ -637,16 +636,13 @@
      * it in the middle anyway
      */
     _centerImage: function(img_container, image_width, image_height) {
-      img_container.css('top', '0px');
-      if(image_height < this.image_wrapper_height) {
-        var dif = this.image_wrapper_height - image_height;
-        img_container.css('top', (dif / 2) +'px');
-      };
+		// top menu 만큼 띄운다.
+      img_container.css('top', '90px');
+//      if(image_height < this.image_wrapper_height) {
+//        var dif = this.image_wrapper_height - image_height;
+//       img_container.css('top', (dif / 2) +'px');
+//      };
       img_container.css('left', '0px');
-      if(image_width < this.image_wrapper_width) {
-        var dif = this.image_wrapper_width - image_width;
-        img_container.css('left', (dif / 2) +'px');
-      };
       if(image_width < this.image_wrapper_width) {
         var dif = this.image_wrapper_width - image_width;
         img_container.css('left', (dif / 2) +'px');

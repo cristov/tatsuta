@@ -199,11 +199,9 @@ li {
 	height:30px;
 }
 #cm-image{
-	padding-top:90px;
+	position:relative;
 	width:75%;
 	height:100%;
-	margin-left:auto;
-	margin-right:auto;
 }
 #cm-image img {
 	width:100%;
@@ -232,12 +230,14 @@ li {
 	background:#ccc;
 }
 .cell_1 {
-	width: 70%;
+	width: 30%;
 	float: left;
 }
 .cell_2 {
-	width: 30%;
+	width: 70%;
 	float: left;
+	max-height:3em;
+	overflow:hidden;
 }
 .clear-both {
 	clear: both;
