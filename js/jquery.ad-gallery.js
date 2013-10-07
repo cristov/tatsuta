@@ -692,6 +692,8 @@
 		  $('input[name="pagenation"]').val(index+1);
 
         var context = this;
+        context.image_wrapper.empty();
+
         var image = this.images[index];
         var img_container = $(document.createElement('div')).attr('id','cm-image');
         var img = $(new Image()).attr('src', image.image);
@@ -705,7 +707,9 @@
 			 $('#nav-screen-img').attr({'src':image.image,'data-zoom-image':image.imgage});
 			 //$('#nav-screen').append(nav_image);
         };
-        this.image_wrapper.prepend(img_container);
+        context.image_wrapper.prepend(img_container);
+
+		//size control
         var size = this._getContainedImageSize(image.size.width, image.size.height);
         img.attr('width', size.width);
         img.attr('height', size.height);
@@ -895,8 +899,10 @@
       };
     },
 	resize: function(){
-	//alert(this.current_index);
-		this._showWhenLoaded(this.current_index);
+		var context = this;
+		context.image_wrapper_width = context.image_wrapper.width();
+		context.image_wrapper_height = context.image_wrapper.height();
+		context._showWhenLoaded(this.current_index);
 	}
 
   };
