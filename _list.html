@@ -6,12 +6,32 @@
 	$mi->thumbnail_type = 'ratio';
 
 	$slider_js = json_encode($document_list);
+
+	$thumb_list = getThumbnailList();
+	$thumb_js = json_encode($thumb_list);
 }
 <load target="webcatalog.css" />
 <load target="js/jquery.elevatezoom.js" />
 <load target="js/jquery.ad-gallery.js" />
 <load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
 <load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+<?php
+function getThumbnailList() {
+	$oDocumentModel = &getModel('document');
+	$output = $oDocumentModel->getDocumentList($args, true);
+	$result;
+
+	foreach ($output->data as $doc) {
+		$document_srl = $doc->document_srl;
+		$oDocument = $oDocumentModel->getDocument($document_srl);
+		$thumbnail = $oDocument->getThumbnail(130, 100, 'ratio');
+		$result[$document_srl] = $thumbnail;
+	}
+
+	return $result;
+}
+?>
 
 <script type="text/javascript">
 
@@ -24,6 +44,9 @@ for (var i in slider_js) {
 }
 slider_arr.sort();
 slider_arr.reverse();
+
+// thumbnail list
+var thumb_js = {$thumb_js};
 
 jQuery(function($) {
 	isZoomActive = false;
@@ -91,13 +114,6 @@ jQuery(function($) {
 		}
 	};
 
-	getThumbSrc = function(document_srl) {
-		'{$document_srl = document_srl; }';
-      '{$oDocument->documentItem($document_srl)}';
-      return '{$oDocument->getThumbnail(130, 100, "ratio")}';
-		//return 'http://tatsutaweb.com/files/cache/thumbnails/' + document_srl + '/130x100.ratio.jpg';
-   };
-
 	$(window).resize(function(){
 		gallery.resize();
 	});
@@ -158,7 +174,6 @@ jQuery(function($) {
 				modal: true,
 				draggable: false,
 				resizable: false,
-				//hide: 'explode',
 				title: '검색',
 				width: 400,
 				height: 100,
@@ -186,8 +201,6 @@ jQuery(function($) {
 				data: data,
 				contentType: 'application/json'
 			}).done(function(resp) {
-				console.log('Done. ' + resp);
-
 				$('.ui-dialog').animate({
 					'width': '800px',
 					'height': '100%',
@@ -222,9 +235,7 @@ jQuery(function($) {
 						oCell_1_attr['class'] = 'cell_1 cm-content-a';
 						oCell_1_attr['data'] = document_srl;
 						var oCell_1 = $(document.createElement('span')).attr(oCell_1_attr).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
-						var src = getThumbSrc(document_srl);
-						console.log("src : " + src);
-						var oImage = $(new Image()).attr('src', src);
+						var oImage = $(new Image()).attr('src', thumb_js[document_srl]);
 						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(oImage);
 						var oCell_3 = $(document.createElement('div')).attr('class', 'cell_3').append(strip_tags(content));
 						var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
