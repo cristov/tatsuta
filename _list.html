@@ -188,7 +188,7 @@ jQuery(function($) {
 				data: data,
 				contentType: 'application/json'
 			}).done(function(resp) {
-				if ($.browser.msie == true && $.browser.version != '10.0') {
+				if ($.browser.msie == true && parseInt($.browser.version, 10) < 10) {
 					$('.ui-dialog').css({
 						'width': '800px',
 						'height': '100%',
