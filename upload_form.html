@@ -31,7 +31,9 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
         }
     </style>
     <script>
+      var uploadList;
       $(document).ready(function() {
+        uploadList = $('#uploadList');
         var manualuploader = $('#manual-fine-uploader').fineUploader({
             request: {
                 endpoint: 'endpoint.php'
@@ -54,7 +56,6 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
             }).done(function(data, textStatus, jqXHR) {
                 if (textStatus === "success") {
                     var fileSrl = data.variables.file_srl;
-                    uploadList = $('#uploadList');
                     buildUploadRow(id+1, fileName, fileSrl);
                 } else {
                     console.log("fail");
@@ -70,7 +71,6 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
             var uploadListArea = $('#uploadListArea');
             uploadListArea.css('display', 'block');
 
-            var uploadList = $('#uploadList');
             var oRow = $(document.createElement('div'));
 
             var inputPage = $(document.createElement('input')).attr({type: 'text', name: 'page', value: id}).css({width: '90%'});
@@ -89,7 +89,6 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
 
       var childrenCount = 0;
       function writeDocument() {
-          var uploadList = $('#uploadList');
           childrenCount = uploadList.children().length;
           
           writeDocumentReady(1);
@@ -125,46 +124,49 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
               },
               dataType: 'json',
               success: function(data) {
-                  var document_srl = data.document_srl;
+                  if (num < childrenCount-1) writeDocumentReady(num+1);
+                  if (num == childrenCount-1) writeDocumentSuccess();
 
+                  var document_srl = data.document_srl;
+                  writeDocumentUpdateRequest(id, document_srl, title, content)
+              },
+              error: function(resp) {
+                  console.log("error [act=procBoardInsertDocument]");
+              }
+          });
+      };
+
+      function writeDocumentUpdateRequest(id, document_srl, title, content) {
+          $.ajax({
+              url: './',
+              type: 'POST',
+              contentType: 'application/json',
+              data: {
+                  'act': 'updateFile',
+                  'srl': id,
+                  'target_srl': document_srl,
+                  'isvalid': 'Y'
+              },
+              dataType: 'json',
+              success: function(data) {
                   $.ajax({
                       url: './',
                       type: 'POST',
                       contentType: 'application/json',
                       data: {
-                          'act': 'updateFile',
-                          'srl': id,
-                          'target_srl': document_srl,
-                          'isvalid': 'Y'
+                          'act': 'procDocumentUpdateUploadedCount',
+                          'content': content,
+                          'title': title,
+                          'document_srl': document_srl
                       },
-                      dataType: 'json',
-                      success: function(data) {
-                          $.ajax({
-                              url: './',
-                              type: 'POST',
-                              contentType: 'application/json',
-                              data: {
-                                  'act': 'procDocumentUpdateUploadedCount',
-                                  'content': content,
-                                  'title': title,
-                                  'document_srl': document_srl
-                              },
-                              success: function(data) {
-                                  if (num < childrenCount-1) writeDocumentReady(num+1);
-                                  if (num == childrenCount-1) writeDocumentSuccess();
-                              },
-                              error: function(resp) {
-                                  console.log("error [act=procDocumentUpdateUploadedCount]");
-                              }
-                          });
-                      },
+                      success: function(data) {},
                       error: function(resp) {
-                          console.log("error [act=updateFile]");
+                          console.log("error [act=procDocumentUpdateUploadedCount]");
                       }
                   });
               },
               error: function(resp) {
-                  console.log("error [act=procBoardInsertDocument]");
+                  console.log("error [act=updateFile]");
               }
           });
       };
@@ -172,6 +174,9 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
       function writeDocumentSuccess() {
           var uploadListArea = $('#uploadListArea');
           uploadListArea.css('display', 'none');
+          
+          var uploadResultArea = $('#uploadResultArea');
+          uploadResultArea.css('display', 'block');
       };
     </script>
   </head>
@@ -211,9 +216,9 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
         </div>
     </script>
 
-    <div id="uploadListArea" style="display:none;">
+    <div id="uploadListArea" style="display: none;">
         <div id="uploadList" style="margin-top: 30px;">
-            <div style="background:#eee;">
+            <div style="background: #eee;">
                 <div class="cell_name">파일명</div>
                 <div class="cell_page">순서</div>
                 <div class="cell_title">제목</div>
@@ -222,6 +227,12 @@ $_SESSION['upload_info'][$editor_sequence]->enabled = true;
         </div>
         <div>
             <button type="button" class="btn" onclick="javascript:writeDocument();">Write</button>
+        </div>
+    </div>
+
+    <div id="uploadResultArea" style="display: none;">
+        <div style="background: #5DA30C; color: #FFF; margin-top: 30px; padding: 7px; line-height: 12px; font-size: 16px;">
+            저장되었습니다.
         </div>
     </div>
   </body>
