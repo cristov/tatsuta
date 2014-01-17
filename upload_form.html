@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Manually Trigger Uploads</title>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/all.fineuploader-4.1.0-13.min.js"></script>
+    <load target="fineuploader-4.1.0-13.min.css" /> 
+
+<?php
+$editor_sequence = '1';
+$_SESSION['upload_info'][$editor_sequence]->enabled = true;
+?>
+    <style>
+        .cell_name {
+            float: left;
+            width: 20%;
+            overflow: auto;
+        }
+        .cell_page {
+            float: left;
+            width: 10%;
+        }
+        .cell_title {
+            float: left;
+            width: 30%;
+        }
+        .cell_content {
+            float: left;
+            width: 40%;
+        }
+    </style>
+    <script>
+      $(document).ready(function() {
+        var manualuploader = $('#manual-fine-uploader').fineUploader({
+            request: {
+                endpoint: 'endpoint.php'
+            },
+            template: "qq-template-manual-noedit",
+            autoUpload: false
+        }).on("complete", function(event, id, fileName, responseJSON) {
+            $.ajax({
+                type: "POST",
+                url: "./",
+                data: {
+                    act : "procFileMultiUpload",
+                    logged_info : { is_admin : '{$logged_info->is_admin}' },
+                    Filedata : { name : fileName, tmp_name : "./files/temp/" + responseJSON.uploadName },
+                    editor_sequence : "1",
+                    module_srl : '{$module_info->module_srl}'
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            }).done(function(data, textStatus, jqXHR) {
+                if (textStatus === "success") {
+                    var fileSrl = data.variables.file_srl;
+                    uploadList = $('#uploadList');
+                    buildUploadRow(id+1, fileName, fileSrl);
+                } else {
+                    console.log("fail");
+                }
+            });
+        });
+
+        $('#triggerUpload').click(function() {
+            manualuploader.fineUploader('uploadStoredFiles');
+        });
+
+        function buildUploadRow(id, name, srl) {
+            var uploadListArea = $('#uploadListArea');
+            uploadListArea.css('display', 'block');
+
+            var uploadList = $('#uploadList');
+            var oRow = $(document.createElement('div'));
+
+            var inputPage = $(document.createElement('input')).attr({type: 'text', name: 'page', value: id}).css({width: '90%'});
+            var inputTitle = $(document.createElement('input')).attr({type: 'text', name: 'title'}).css({width: '97%'});
+            var textarea = $(document.createElement('textarea')).attr('name', 'content').css({width: '99%', height: '80px', resize: 'none'});
+            var oCell_name = $(document.createElement('div')).attr({class: 'cell_name', id: srl}).append(name);
+            var oCell_page = $(document.createElement('div')).attr('class', 'cell_page').append(inputPage);
+            var oCell_title = $(document.createElement('div')).attr('class', 'cell_title').append(inputTitle);
+            var oCell_content = $(document.createElement('div')).attr('class', 'cell_content').append(textarea);
+
+            oRow.append(oCell_name, oCell_page, oCell_title, oCell_content);
+            uploadList.append(oRow);
+        };
+            
+      });
+
+      var childrenCount = 0;
+      function writeDocument() {
+          var uploadList = $('#uploadList');
+          childrenCount = uploadList.children().length;
+          
+          writeDocumentReady(1);
+      };
+
+      function writeDocumentReady(num) {
+          var $page = $('input[type="text"][name="page"][value="' + num + '"]');
+          var $row = $page.parent().parent();
+          var $nameCell = $row.find('div[class="cell_name"]');
+          var id = $nameCell.attr('id');
+          var title = $row.find('input[name=title]').val();
+          var content = $row.find('textarea[name=content]').val();
+
+          writeDocumentRequest(id, title, content, num);
+
+          uploadList.find($row).remove();
+      };
+
+      function writeDocumentRequest(id, title, content, num) {
+          $.ajax({
+              url: './',
+              type: 'POST',
+              contentType: 'application/json',
+              data: {
+                  '_filter': 'insert',
+                  'act': 'procBoardInsertDocument',
+                  'mid': '{$mid}',
+                  'content': content,
+                  'title': title,
+                  'comment_status': 'ALLOW',
+                  'allow_trackback': 'Y',
+                  'module': 'board'
+              },
+              dataType: 'json',
+              success: function(data) {
+                  var document_srl = data.document_srl;
+
+                  $.ajax({
+                      url: './',
+                      type: 'POST',
+                      contentType: 'application/json',
+                      data: {
+                          'act': 'updateFile',
+                          'srl': id,
+                          'target_srl': document_srl,
+                          'isvalid': 'Y'
+                      },
+                      dataType: 'json',
+                      success: function(data) {
+                          $.ajax({
+                              url: './',
+                              type: 'POST',
+                              contentType: 'application/json',
+                              data: {
+                                  'act': 'procDocumentUpdateUploadedCount',
+                                  'content': content,
+                                  'title': title,
+                                  'document_srl': document_srl
+                              },
+                              success: function(data) {
+                                  if (num < childrenCount-1) writeDocumentReady(num+1);
+                                  if (num == childrenCount-1) writeDocumentSuccess();
+                              },
+                              error: function(resp) {
+                                  console.log("error [act=procDocumentUpdateUploadedCount]");
+                              }
+                          });
+                      },
+                      error: function(resp) {
+                          console.log("error [act=updateFile]");
+                      }
+                  });
+              },
+              error: function(resp) {
+                  console.log("error [act=procBoardInsertDocument]");
+              }
+          });
+      };
+      
+      function writeDocumentSuccess() {
+          var uploadListArea = $('#uploadListArea');
+          uploadListArea.css('display', 'none');
+      };
+    </script>
+  </head>
+  <body>
+
+    <!-- Fine Uploader DOM Element -->
+    <div id="manual-fine-uploader"></div>
+    <div id="triggerUpload" class="btn btn-primary" style="margin-top: 10px;">
+      Upload now
+    </div>
+
+    <!-- Fine Uploader template -->
+    <script type="text/template" id="qq-template-manual-noedit">
+        <div class="qq-uploader-selector qq-uploader">
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span>Drop files here to upload</span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processing dropped files...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+            <ul class="qq-upload-list-selector qq-upload-list">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">Cancel</a>
+                    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <div id="uploadListArea" style="display:none;">
+        <div id="uploadList" style="margin-top: 30px;">
+            <div style="background:#eee;">
+                <div class="cell_name">파일명</div>
+                <div class="cell_page">순서</div>
+                <div class="cell_title">제목</div>
+                <div>내용</div>
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn" onclick="javascript:writeDocument();">Write</button>
+        </div>
+    </div>
+  </body>
+</html>
