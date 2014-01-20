@@ -7,11 +7,14 @@
 
 	$slider_js = json_encode($document_list);
 }
-<load target="webcatalog.css" />
+
+
+<load target="webcatalog.css"/>
 <load target="js/jquery.elevatezoom.js" />
 <load target="js/jquery.ad-gallery.js" />
 <load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
-<load target="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<load target="jquery-ui.css" />
+<load target="print.css" media="print"/>
 
 <script type="text/javascript">
 
@@ -20,9 +23,10 @@ var slider_arr = new Array();
 var slider_js = {$slider_js};
 for (var i in slider_js) {
 	var doc = slider_js[i];
-	slider_arr.unshift(doc.document_srl);
+	//slider_arr.unshift(doc.document_srl);
+	slider_arr.push(doc.document_srl);
 }
-slider_arr.sort();
+//slider_arr.sort();
 slider_arr.reverse();
 
 jQuery(function($) {
@@ -34,7 +38,11 @@ jQuery(function($) {
 
 		var cheight = _getImageContainerSize('cm-image').height;
 		var cwidth = _getImageContainerSize('cm-image').width;
-
+		
+		if ( $.browser.msie ) {
+  
+    }
+		
 		zoom = $('#nav-screen-img');
 		zoom.elevateZoom({zoomWindowPosition: "cm-image", zoomWindowHeight: cheight, zoomWindowWidth: cwidth, borderSize: 0});
 
@@ -102,21 +110,63 @@ jQuery(function($) {
 	};
 
 	$(window).resize(function(){
+		var $menuHeight = $(".menu-wrapper").height()-8;
+		var $resizeHeight = $(window).height()-$menuHeight;
+		$("#cm-thumbs, #cm-contents").css("height", $resizeHeight);
+		/*console.log("硫붾돱�믪씠 :"+$menuHeight);*/
+		/*console.log("硫붾돱鍮쇨퀬 :"+$resizeHeight);*/
+		
 		gallery.resize();
 	});
 
 	$(document).ready(function(){
 
+		$open = false;
+
 		isZoomActive = false;
-
+		
 		gallery = $('#catalog-main').adGallery(); 
+		
+		
 
+ 		var initBody;
+
+		function beforPrint(){
+			calendars = document.body.innerHTML;
+			document.body.innerHTML = cm_image_wrapper.innerHTML;
+		}
+		
+		function afterPrint(){
+			document.body.innerHTML = calendars;
+		}
+		
+		function printArea(){
+			window.print();
+		}
+		
+		window.onbeforeprint = beforPrint;
+		window.onafterPrint = afterPrint;
+
+		$("#mw-print").on("click", function(){
+			printArea();
+		});
+		
 		_setDomControlForMSIE();
-
-		$('#cct-page').click(function() {
+		
+		var $menuHeight = $(".menu-wrapper").height()-8;
+		$("#cm-thumbs, #cm-contents").css("height", $(window).height()-$menuHeight);
+		$('#cct-page').on("click", function() {
 			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
+			if($open == false){
+				$('#cm-thumbs').css("overflow-y", "scroll");
+				$open = true;	
+			}else{
+				$('#cm-thumbs').css("overflow-y", "hidden");
+				$open = false;
+			}
 		});
 
+		
 		$('#cct-list').click(function() {
 			$('#cm-contents').toggleClass('hide');
 		});
@@ -124,6 +174,10 @@ jQuery(function($) {
 		$('#cct-close').click(function() {
 			$('#cm-thumbs, .ad-back, .ad-forward').addClass('hide');
 			$('#cm-contents').addClass('hide');
+			if($open == true){
+				$('#cm-thumbs').css("overflow-y", "hidden");
+				$open = false;
+			}
 		});
 
 		$('#page-slider').slider({
@@ -134,9 +188,9 @@ jQuery(function($) {
 				$('a#' + data).trigger('click');
 			},
 			create: function( event, ui ) {
-				var id = window.location.hash.replace(/^#ad-image-/g, '');
-				var index = $.inArray(id, slider_arr);
-				$(this).slider('option', 'value', index);
+        var id = window.location.hash.replace(/^#ad-image-/g, '');
+        var index = $.inArray(Number(id), slider_arr);
+        $(this).slider('option', 'value', index);
 			}
 		});
 
@@ -153,6 +207,7 @@ jQuery(function($) {
 				disableZoom();
 			}
 		});
+		
 		$('span.cm-content-a').click(function() {
 			clickTriger(this);
 		});
@@ -250,47 +305,64 @@ jQuery(function($) {
 });
 </script>
 
-	<div class="menu-wrapper">
-		<div id="tatsuta"></div>
-		<ul class="mw-sub">
-			<li id="mw-pdfdown"><img src="img/btn_pdfdown.png"></li>
-		</ul>
-		<ul class="mw-sub">
-			<li id="mw-mail" class="nav-btn"><img src="img/btn_mail.png"></li>
-			<li id="mw-print" class="nav-btn"><img src="img/btn_print.png"></li>
-			<li id="mw-size" class="nav-btn"><img src="img/btn_size.png"></li>
-		</ul>
-		<ul class="mw-sub">
-			<li id="mw-start-page" class="nav-btn"><img src="img/btn_prev02.png"></li>
-			<li id="mw-prev-page" class="nav-btn"><img src="img/btn_prev01.png"></li>
-			<div id="mw-input-pagenum"><input type="text" name="pagenation" style="width:40px;"><span id="pagecount"></span></div>
-			<li id="mw-go" class="nav-btn"><img src="img/btn_go.png"></li>
-			<li id="mw-next-page" class="nav-btn"><img src="img/btn_next01.png"></li>
-			<li id="mw-end-page" class="nav-btn"><img src="img/btn_next02.png"></li>
-		</ul>
-		<ul class="mw-sub">
-			<li id="mw-zoomin" class="nav-btn"><img src="img/btn_zoomin.png"></li>
-			<li id="mw-zoomout" class="nav-btn"><img src="img/btn_zoomout.png"></li>
-		</ul>
-		<ul class="mw-sub">
-			<li id="mw-search" class="nav-btn"><img src="img/btn_search.png"></li>
-		</ul>
-		<div class="clear"></div>
-	</div>
+
+
+<div class="menu-wrapper">
+	<div id="tatsuta"></div>
+
+	<ul class="mw-sub">
+		<li id="mw-start-page" class="nav-btn1"><img src="img/firstPage.png">
+		</li>
+		<li id="mw-prev-page" class="nav-btn1"><img src="img/prevPage.png">
+		</li>
+
+		<li id="mw-next-page" class="nav-btn1"><img src="img/nextPage.png">
+		</li>
+		<li id="mw-end-page" class="nav-btn1_last"><img src="img/lastPage.png">
+		</li>
+		<li id="mw-input-pagenum">
+			<input type="text" name="pagenation" class="countBox" style="width:40px;">
+			<span id="pagecount">&nbsp;</span>
+		</li>
+		<li id="mw-go"><img src="img/goBtn.png">
+		</li>
+	</ul>
+	
+	<ul class="mw-sub">
+		<li id="mw-zoomin" class="nav-btn2"><img src="img/plusBtn.png">
+		</li>
+		<li id="mw-zoomout" class="nav-btn2"><img src="img/minusBtn.png">
+		</li>
+		<li id="mw-mail" class="nav-btn2"><a href="mailto:tatsutakorea@tatsutakorea.com"><img src="img/mailBtn.png" border="0"></a>
+		</li>
+		<li id="mw-print" class="nav-btn2"><img src="img/printBtn.png">
+		</li>
+		<!--<li id="mw-size" class="nav-btn2"><img src="img/fsnBtn.png">
+		</li>-->
+		<li id="mw-pdfdown" class="nav-btn3"><a href="http://www.web2pdfconvert.com/download?path=851ddc21-e8e4-4a1c-9f1d-79e06eacf5bfplease.pdf"><img src="img/dloadBtn.png" border="0"></a>
+		</li>
+	</ul>
+	<ul class="mw-sub">
+		<li id="mw-search" class="nav-btn"><img src="img/searchBtn.png">
+		</li>
+	</ul>
+	<div class="clear"></div>
+</div>
+
 
 	<div id="page-slider">
-		<img id="ps-left" src="img/slide_button01.png" width="22" height="20">
-		<img id="ps-right" src="img/slide_button02.png">
 		<div class="clear"></div>
 	</div>
 
+	
+	
 	<div id="catalog-main">
-		<div id="cm-image-wrapper">&nbsp;</div>
+		<div id="cm_image_wrapper">&nbsp;</div>
 		<div id="catalog-table-contents">
 			<div id="cm-thumbs" class="hide">
 				<ul id="cm-thumb-list">
 					<li class="clearfix" loop="$document_list=>$doc">
-						<a href="{$doc->getThumbSourceFile()}" id="{$doc->document_srl}">
+          <a href="{$doc->getThumbSourceFile()}" id="{$doc->document_srl}"> 
 							<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
 						</a>
 					</li>
@@ -300,15 +372,15 @@ jQuery(function($) {
 				<ul id="cm-content-list">
 					<li class="clearfix" loop="$notice_list=>$no,$document">
 						<span class="cm-content-a" data="{$no}">
-							{$document->getTitle($module_info->subject_cut_size)}
+							{$document->getTitle($module_info->subject_cut_size)}											
 						</span>
 					</li>
 				</ul>
 			</div>
 			<div id="catalog-content-tab">
-				<img id="cct-page" src="img/tab01.png">
-				<img id="cct-list" src="img/tab02.png">
-				<img id="cct-close" src="img/tab03.png">
+				<img id="cct-page" class="margin1" src="img/tab1.png">
+				<img id="cct-list" class="margin2" src="img/tab2.png">
+				<img id="cct-close" class="margin2" src="img/tab3.png">
 			</div>
 		</div>
 		<div class="clear"></div>

@@ -15,7 +15,7 @@
                      description_wrapper: false,
                      thumb_opacity: 0.7,
                      animate_first_image: false,
-                     animation_speed: 400,
+                     animation_speed: 250,
                      width: false,
                      height: false,
                      display_next_and_prev: true,
@@ -33,7 +33,7 @@
                        onStart: false,
                        onStop: false
                      },
-                     effect: 'fade', // or 'slide-vert', 'fade', or 'resize', 'none'
+                     effect: 'none', // or 'slide-vert', 'fade', or 'resize', 'none'
                      enable_keyboard_move: true,
                      cycle: true,
                      hooks: {
@@ -241,7 +241,7 @@
       this.controls = this.wrapper.find('.ad-controls');
       this.gallery_info = $('<p class="ad-info"></p>');
       this.controls.append(this.gallery_info);
-      this.image_wrapper = this.wrapper.find('#cm-image-wrapper');
+      this.image_wrapper = this.wrapper.find('#cm_image_wrapper');
       this.image_wrapper.empty();
       this.nav = this.wrapper.find('#catalog-table-contents');
       this.thumbs_wrapper = this.nav.find('#cm-thumbs');
@@ -401,8 +401,8 @@
 			if(isZoomActive) resetZoom();
 		});
 		$('#mw-go').click(function() {
-	      var page = $('input[name="pagenation"]').val();
-	      context.showImage(page-1);
+	    var page = $('input[name="pagenation"]').val();
+	    context.showImage(page-1);
 			if(isZoomActive) resetZoom();
 		});
 		$('#mw-prev-page').click(function() {
@@ -510,8 +510,8 @@
       };
     },
     initNextAndPrev: function() {
-      this.next_link = $('<img id="cm-next">&nbsp;</div>');
-      this.prev_link = $('<img id="cm-prev">&nbsp;</div>');
+      this.next_link = $('<div id="cm-next">&nbsp;</div>');
+      this.prev_link = $('<div id="cm-prev">&nbsp;</div>');
       this.image_wrapper.append(this.next_link);
       this.image_wrapper.append(this.prev_link);
       var context = this;
@@ -573,9 +573,9 @@
               if(has_scrolled > 30 && context.settings.slideshow.stop_on_scroll) {
                 context.slideshow.stop();
               };
-              var left = context.thumbs_wrapper.scrollTop() + 1;
+              var left = context.thumbs_wrapper.scrollTop() + 30;
               if(direction == 'left') {
-                left = context.thumbs_wrapper.scrollTop() - 1;
+                left = context.thumbs_wrapper.scrollTop() - 30;
               };
               context.thumbs_wrapper.scrollTop(left);
             },
@@ -637,7 +637,7 @@
      */
     _centerImage: function(img_container, image_width, image_height) {
 		// top menu 만큼 띄운다.
-      img_container.css('top', '90px');
+      img_container.css('top', '92px');
 //      if(image_height < this.image_wrapper_height) {
 //        var dif = this.image_wrapper_height - image_height;
 //       img_container.css('top', (dif / 2) +'px');
@@ -681,6 +681,9 @@
         } else {
           this._showWhenLoaded(index, callback);
         };
+        
+        var slider = $('#page-slider');
+        slider.slider('value', index);
       };
     },
     /**
@@ -692,7 +695,6 @@
 		  $('input[name="pagenation"]').val(index+1);
 
         var context = this;
-        context.image_wrapper.empty();
 
         var image = this.images[index];
         var img_container = $(document.createElement('div')).attr('id','cm-image');
@@ -899,10 +901,20 @@
       };
     },
 	resize: function(){
+		//when broswer is resized, all objects reset and redrawing.
 		var context = this;
+      context.image_wrapper.empty();
+
+      context.loader = $('<div id="cm-loader"></div>');
+		context.image_wrapper.append(context.loader);
+		context.loading(true);
+
+      if(context.settings.display_next_and_prev) { context.initNextAndPrev(); };
 		context.image_wrapper_width = context.image_wrapper.width();
 		context.image_wrapper_height = context.image_wrapper.height();
 		context._showWhenLoaded(this.current_index);
+
+		context.loading(false);
 	}
 
   };
