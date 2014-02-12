@@ -16,6 +16,31 @@
 <load target="jquery-ui.css" />
 <load target="print.css" media="print"/>
 
+<style>
+    #bookmark-toggle {
+        z-index:10;
+        position:absolute;
+        left:50%;
+        margin-left:-170px;
+        top:65px;
+    }
+
+    span.toggler {
+        background: green;
+        cursor: pointer;
+        border: 2px solid black;
+        border-right-width: 15px;
+        padding: 0 5px;
+        border-radius: 5px;
+    }
+
+    span.toggler.off {
+        background: red;
+        border-right-width: 2px;
+        border-left-width: 15px;
+    }
+</style>
+
 <script type="text/javascript">
 
 // slider section
@@ -28,6 +53,8 @@ for (var i in slider_js) {
 }
 //slider_arr.sort();
 slider_arr.reverse();
+
+var bookmark_arr = new Array();
 
 jQuery(function($) {
 	isZoomActive = false;
@@ -92,6 +119,16 @@ jQuery(function($) {
    	});
 	};
 
+  setBookmarkToggle = function() {
+    var toggler = $('span.toggler');
+    toggler.removeClass('off');
+
+    var id = window.location.hash.replace(/^#ad-image-/g, '');
+    var index = $.inArray(Number(id), bookmark_arr);
+
+    if (index == -1) toggler.addClass('off');
+  };
+
 	function _setDomControlForMSIE() {
 		if ($.browser.msie == true && $.browser.version == '7.0') {
 			$('#cm-thumbs').hide();
@@ -120,14 +157,17 @@ jQuery(function($) {
 	});
 
 	$(document).ready(function(){
-
-		$open = false;
+		var $open = false;
 
 		isZoomActive = false;
 		
 		gallery = $('#catalog-main').adGallery(); 
 		
-		
+		$("#mw-size").on("click", function(e) {
+			var url = "http://www.tatsutaweb.com/popup/popup.html";
+			var option = "width=500, height=833, scrollbars=no, resi0able=no0 top=0, left=0, toolbar=no, location=no, directories=no, channelmode=no, status=no, titlebar=no";
+			window.open(url, "_blank", option);
+		});
 
  		var initBody;
 
@@ -208,6 +248,34 @@ jQuery(function($) {
 			}
 		});
 		
+    $('#mw-bookmark').click(function() {
+      $('#bookmark-dialog').dialog({
+				modal: true,
+				draggable: false,
+				resizable: false,
+				title: '북마크',
+				width: '80%',
+				height: document.height - 20,
+				position: {
+					at: 'top'
+				},
+        open: function( event, ui ) {
+          var $result = $('#bd-result');
+			    $result.empty();
+
+          var bookmarkCnt = bookmark_arr.length;
+          if (bookmarkCnt == 0) {
+            $('.ui-dialog').css('height', 100);
+					  var oCell_noResult= $(document.createElement('div')).attr('class', 'sd-result-head').append('북마크된 페이지가 없습니다.');
+            $result.append(oCell_noResult);
+          } else {
+          }
+        },
+				close: function( event, ui ) {
+				}
+			});
+    });
+
 		$('span.cm-content-a').click(function() {
 			clickTriger(this);
 		});
@@ -270,7 +338,8 @@ jQuery(function($) {
 				var oResult = $('#sd-result');
 				var document_list = $.parseJSON(resp).document_list;
 				if (document_list.length == 0) {
-					oResult.append('검색결과가 없습니다.');
+				  var oCell_noResult= $(document.createElement('div')).attr('class', 'sd-result-head').append('검색결과가 없습니다.');
+					oResult.append(oCell_noResult);
 				} else {
 					var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
 					var oCell_image = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('미리보기');
@@ -300,7 +369,20 @@ jQuery(function($) {
 			}).fail(function(msg) {
 				console.log('Fail. ' + msg);
 			});
-		});
+    });
+    $('span.toggler').click(function(){
+        var id = window.location.hash.replace(/^#ad-image-/g, '');
+        var index = $.inArray(Number(id), bookmark_arr);
+
+        if (index >= 0) {
+            bookmark_arr.splice(index, 1);
+        } else {
+            bookmark_arr.push(Number(id));
+            bookmark_arr.sort();
+        }
+
+        $(this).toggleClass('off');
+    });
 	});
 });
 </script>
@@ -310,39 +392,57 @@ jQuery(function($) {
 <div class="menu-wrapper">
 	<div id="tatsuta"></div>
 
-	<ul class="mw-sub">
-		<li id="mw-start-page" class="nav-btn1"><img src="img/firstPage.png">
+	<ul class="mw-sub2">
+		<li id="mw-start-page" class="nav-btn1"><img src="img/firstBtn.jpg">
 		</li>
-		<li id="mw-prev-page" class="nav-btn1"><img src="img/prevPage.png">
+		<li id="mw-prev-page" class="nav-btn1"><img src="img/prevBtn.jpg">
 		</li>
 
-		<li id="mw-next-page" class="nav-btn1"><img src="img/nextPage.png">
+		<li id="mw-next-page" class="nav-btn1"><img src="img/nextBtn.jpg">
 		</li>
-		<li id="mw-end-page" class="nav-btn1_last"><img src="img/lastPage.png">
-		</li>
-		<li id="mw-input-pagenum">
-			<input type="text" name="pagenation" class="countBox" style="width:40px;">
-			<span id="pagecount">&nbsp;</span>
-		</li>
-		<li id="mw-go"><img src="img/goBtn.png">
+		<li id="mw-end-page" class="nav-btn1_last"><img src="img/lastBtn.jpg">
 		</li>
 	</ul>
 	
 	<ul class="mw-sub">
-		<li id="mw-zoomin" class="nav-btn2"><img src="img/plusBtn.png">
+		<li id="mw-zoomin" class="nav-btn2">
+			<img src="img/plusBtn.jpg" alt="plusBtn">
 		</li>
-		<li id="mw-zoomout" class="nav-btn2"><img src="img/minusBtn.png">
+		<li id="mw-zoomout" class="nav-btn2">
+			<img src="img/minusBtn.jpg" alt="minusBtn">
 		</li>
-		<li id="mw-mail" class="nav-btn2"><a href="mailto:tatsutakorea@tatsutakorea.com"><img src="img/mailBtn.png" border="0"></a>
+		<li id="mw-bookmark" class="nav-btn2">
+      <!-- TODO rename img src -->
+			<img src="img/mailBtn.jpg" alt="bookmarkBtn">
 		</li>
-		<li id="mw-print" class="nav-btn2"><img src="img/printBtn.png">
+		<li id="mw-mail" class="nav-btn2">
+			<a href="mailto:tatsutakorea@tatsutakorea.com">
+				<img src="img/mailBtn.jpg" border="0" alt="mailBtn">
+			</a>
 		</li>
-		<!--<li id="mw-size" class="nav-btn2"><img src="img/fsnBtn.png">
-		</li>-->
-		<li id="mw-pdfdown" class="nav-btn3"><a href="http://www.web2pdfconvert.com/download?path=851ddc21-e8e4-4a1c-9f1d-79e06eacf5bfplease.pdf"><img src="img/dloadBtn.png" border="0"></a>
+		<li id="mw-print" class="nav-btn2">
+			<img src="img/printBtn.jpg" alt="printBtn">
+		</li>
+		<li id="mw-pdfdown" class="nav-btn2">
+			<a href="http://www.web2pdfconvert.com/download?path=851ddc21-e8e4-4a1c-9f1d-79e06eacf5bfplease.pdf">
+				<img src="img/dloadBtn.jpg" border="0" alt="dloadBtn">
+			</a>
+		</li>
+		<li id="mw-size" class="nav-btn3">
+				<img src="img/helpBtn.jpg">
 		</li>
 	</ul>
 	<ul class="mw-sub">
+
+		
+		<li id="mw-input-pagenum">
+			<input type="text" name="pagenation" class="countBox" style="width:40px;">
+			<span id="pagecount">&nbsp;</span>
+		</li>
+		
+		<li id="mw-go">&nbsp;
+		</li>
+		
 		<li id="mw-search" class="nav-btn"><img src="img/searchBtn.png">
 		</li>
 	</ul>
@@ -354,7 +454,9 @@ jQuery(function($) {
 		<div class="clear"></div>
 	</div>
 
-	
+  <div id="bookmark-toggle">
+    <span class="toggler off">&nbsp;</span>
+  </div>
 	
 	<div id="catalog-main">
 		<div id="cm_image_wrapper">&nbsp;</div>
@@ -377,11 +479,17 @@ jQuery(function($) {
 					</li>
 				</ul>
 			</div>
-			<div id="catalog-content-tab">
-				<img id="cct-page" class="margin1" src="img/tab1.png">
-				<img id="cct-list" class="margin2" src="img/tab2.png">
-				<img id="cct-close" class="margin2" src="img/tab3.png">
-			</div>
+			<ul id="catalog-content-tab">
+				<li id="cct-page" class="margin1">
+					<img src="img/tab1.png">	
+				</li>
+				<li  id="cct-list" class="margin2">
+					<img src="img/tab2.png">	
+				</li>
+				<li  id="cct-close" class="margin2">
+					<img src="img/tab3.png">	
+				</li>
+			</ul>
 		</div>
 		<div class="clear"></div>
 
@@ -397,3 +505,7 @@ jQuery(function($) {
 		</div>
 		<div id="sd-result"></div>
 	</div>
+
+  <div id="bookmark-dialog">
+		<div id="bd-result"></div>
+  </div>
