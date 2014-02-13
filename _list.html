@@ -136,13 +136,13 @@ jQuery(function($) {
 		}
 	};
 
-	function _getThumbnailSrc(document_srl) {
+	function _getThumbnailSrc(document_srl, selector) {
 		var params = {
 			'mid': '{$mid}',
 			'document_srl': document_srl
 		};
 		$.exec_json("board.getThumbnailSrc", params, function(resp) {
-			$('img#sd-thumb-' + document_srl).attr('src', resp.src);
+			$(selector + document_srl).attr('src', resp.src);
 		});
 	};
 
@@ -254,8 +254,8 @@ jQuery(function($) {
 				draggable: false,
 				resizable: false,
 				title: '북마크',
-				width: '80%',
-				height: document.height - 20,
+				width: '800',
+				height: '600',
 				position: {
 					at: 'top'
 				},
@@ -269,6 +269,32 @@ jQuery(function($) {
 					  var oCell_noResult= $(document.createElement('div')).attr('class', 'sd-result-head').append('북마크된 페이지가 없습니다.');
             $result.append(oCell_noResult);
           } else {
+            for (var i in bookmark_arr) {
+                var document_srl = bookmark_arr[i];
+
+                var oCell = $(document.createElement('div'));
+                oCell.css({
+                    'width': 250, 
+                    'height': 250,
+                    'background': '#0f0',
+                    'float': 'left'
+                });
+                if (i % 3 == 0) oCell.css('clear', 'left');
+                $result.append(oCell);
+
+                var oDivThumb = $(document.createElement('div')).css({
+                    'width': 130,
+                    'height': 130,
+                    'position': 'relative',
+                    'top': 10,
+                    'left': '50%',
+                    'margin-left': -65
+                });
+                var oImage = $(new Image()).attr('id', 'bd-thumb-' + document_srl);
+						    _getThumbnailSrc(document_srl, 'img#bd-thumb-');
+                oDivThumb.append(oImage);
+                oCell.append(oDivThumb);
+            }
           }
         },
 				close: function( event, ui ) {
@@ -363,7 +389,7 @@ jQuery(function($) {
 
 						oResult.append(oCell_1, oCell_2, oCell_3, oClear_both);
 
-						_getThumbnailSrc(document_srl);
+						_getThumbnailSrc(document_srl, 'img#sd-thumb-');
 					}
 				}
 			}).fail(function(msg) {
