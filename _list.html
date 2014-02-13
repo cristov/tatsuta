@@ -254,7 +254,7 @@ jQuery(function($) {
 				draggable: false,
 				resizable: false,
 				title: '북마크',
-				width: '800',
+				width: '740',
 				height: '600',
 				position: {
 					at: 'top'
@@ -271,12 +271,13 @@ jQuery(function($) {
           } else {
             for (var i in bookmark_arr) {
                 var document_srl = bookmark_arr[i];
+                var index = $.inArray(Number(document_srl), slider_arr) + 1;
 
-                var oCell = $(document.createElement('div'));
-                oCell.css({
-                    'width': 250, 
-                    'height': 250,
-                    'background': '#0f0',
+                var oCell = $(document.createElement('div')).css({
+                    'margin': 10,
+                    'width': 210, 
+                    'height': 210,
+                    'background': '#ddd',
                     'float': 'left'
                 });
                 if (i % 3 == 0) oCell.css('clear', 'left');
@@ -294,6 +295,41 @@ jQuery(function($) {
 						    _getThumbnailSrc(document_srl, 'img#bd-thumb-');
                 oDivThumb.append(oImage);
                 oCell.append(oDivThumb);
+
+                var oDivPage = $(document.createElement('div')).css({
+                    'width': 60,
+                    'float': 'left',
+                    'margin-left': 20
+                }).append('페이지');
+                var oDivPageVal = $(document.createElement('div')).css('width', '90%').append(index);
+                oCell.append(oDivPage);
+                oCell.append(oDivPageVal);
+
+                var oDivTitle = $(document.createElement('div')).css({
+                    'width': 60,
+                    'margin-left': 20
+                }).append('제목');
+                var oDivTitleVal = $(document.createElement('div')).css({
+                    'width': '90%',
+                    'margin-top': 10,
+                    'margin-left': 20
+                });
+                oCell.append(oDivTitle);
+                oCell.append(oDivTitleVal);
+
+                $.each(slider_js, function(idx, obj) {
+                    if (document_srl == obj.document_srl) {
+                        var variables = obj.variables;
+                        var title = variables.title;
+                        if (title.length > 20) title = title.substring(0, 19) + '...';
+
+                        var oSpanAttr = {};
+                        oSpanAttr['class'] = 'cm-content-a';
+                        oSpanAttr['data'] = document_srl;
+                        var oSpan = $(document.createElement('span')).attr(oSpanAttr).append(title).click(function() { clickTriger(this); $('#bookmark-dialog').dialog('close'); }); 
+                        oDivTitleVal.append(oSpan);
+                    }
+                });
             }
           }
         },
