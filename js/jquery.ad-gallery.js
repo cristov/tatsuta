@@ -853,9 +853,11 @@
               }
             ).error(
               function() {
+                alert('페이지를 열 수 없습니다.\n관리자에게 문의하여 주시기 바랍니다.');
                 image.error = true;
                 image.preloaded = false;
                 image.size = false;
+                window.location.href = '/';
               }
             );
           } else {
