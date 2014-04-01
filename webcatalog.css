@@ -256,16 +256,13 @@ li {
 }
 
 span.toggler {
-    background: green;
+    background: url(modules/board/skins/xe_2010_gallery/img/on.png) no-repeat;
     cursor: pointer;
-    border: 2px solid black;
-    border-right-width: 15px;
     padding: 0 5px;
-    border-radius: 5px;
 }
 
 span.toggler.off {
-    background: red;
+    background: url(modules/board/skins/xe_2010_gallery/img/off.png) no-repeat;
     border-right-width: 2px;
     border-left-width: 15px;
 }
