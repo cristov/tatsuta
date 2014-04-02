@@ -1,0 +1,549 @@
+{@
+	$mi = $module_info;
+	if (!$mi->thumbnail_width)  $mi->thumbnail_width  = 130;
+	if (!$mi->thumbnail_height) $mi->thumbnail_height = 100;
+	
+	$mi->thumbnail_type = 'ratio';
+
+	$slider_js = json_encode($document_list);
+}
+
+
+<load target="webcatalog.css"/>
+<load target="js/jquery.elevatezoom.js" />
+<load target="js/jquery.ad-gallery.js" />
+<load target="http://code.jquery.com/ui/1.10.3/jquery-ui.js" />
+<load target="jquery-ui.css" />
+<load target="print.css" media="print"/>
+
+
+<script type="text/javascript">
+
+// slider section
+var slider_arr = new Array();
+var slider_js = {$slider_js};
+for (var i in slider_js) {
+	var doc = slider_js[i];
+	//slider_arr.unshift(doc.document_srl);
+	slider_arr.push(doc.document_srl);
+}
+//slider_arr.sort();
+slider_arr.reverse();
+
+var bookmark_arr = new Array();
+
+jQuery(function($) {
+	isZoomActive = false;
+	zoom = new Object();
+	enableZoom = function () {
+		$('#cm-image img').css('display', 'none');
+		$('#nav-screen').css('display', 'block');
+
+		var cheight = _getImageContainerSize('cm-image').height;
+		var cwidth = _getImageContainerSize('cm-image').width;
+		
+		if ( $.browser.msie ) {
+  
+    }
+		
+		zoom = $('#nav-screen-img');
+		zoom.elevateZoom({zoomWindowPosition: "cm-image", zoomWindowHeight: cheight, zoomWindowWidth: cwidth, borderSize: 0});
+
+		isZoomActive = true;
+		return isZoomActive;
+	};
+	disableZoom = function () {
+		var result = true;
+		$('#cm-image img').css('display', 'block');
+		$('#nav-screen').css('display', 'none');
+		$('div.zoomLens').remove();
+		$('div.zoomWindowContainer').remove();
+		$('div.zoomContainer').remove();
+
+		isZoomActive = false;
+		return result;
+	};
+	resetZoom = function(){
+		disableZoom();
+		enableZoom();
+	};
+
+	function _getImageContainerSize(elementId) {
+		var elem = $("#"+elementId);
+		var elem_width = elem.width();
+		var elem_height = elem.height();
+
+		return {width: elem_width, height: elem_height};
+	};
+
+	clickTriger = function(obj) {
+		var data = $(obj).attr('data');
+		$('a#' + data).trigger('click');
+	};
+
+	initDialog = function() {
+		$('#search_keyword').val('');
+		$('#search_target option:eq(0)').attr('selected', 'selected');
+		$('#sd-result').empty();
+	};
+
+	strip_tags = function(input, allowed) {
+   	allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+   	var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+   	return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+			return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+   	});
+	};
+
+  setBookmarkToggle = function() {
+    var toggler = $('span.toggler');
+    toggler.removeClass('off');
+
+    var id = window.location.hash.replace(/^#ad-image-/g, '');
+    var index = $.inArray(Number(id), bookmark_arr);
+
+    if (index == -1) toggler.addClass('off');
+  };
+
+	function _setDomControlForMSIE() {
+		if ($.browser.msie == true && $.browser.version == '7.0') {
+			$('#cm-thumbs').hide();
+			$('#cm-contents').hide();
+		}
+	};
+
+	function _getThumbnailSrc(document_srl, selector) {
+		var params = {
+			'mid': '{$mid}',
+			'document_srl': document_srl
+		};
+		$.exec_json("board.getThumbnailSrc", params, function(resp) {
+			$(selector + document_srl).attr('src', resp.src);
+		});
+	};
+
+	$(window).resize(function(){
+		var $menuHeight = $(".menu-wrapper").height()-8;
+		var $resizeHeight = $(window).height()-$menuHeight;
+		$("#cm-thumbs, #cm-contents").css("height", $resizeHeight);
+		/*console.log("硫붾돱�믪씠 :"+$menuHeight);*/
+		/*console.log("硫붾돱鍮쇨퀬 :"+$resizeHeight);*/
+		
+		gallery.resize();
+	});
+
+	$(document).ready(function(){
+		var $open = false;
+
+		isZoomActive = false;
+		
+		gallery = $('#catalog-main').adGallery(); 
+		
+		$("#mw-size").on("click", function(e) {
+			var url = "http://www.tatsutaweb.com/popup/popup.html";
+			var option = "width=500, height=833, scrollbars=no, resi0able=no0 top=0, left=0, toolbar=no, location=no, directories=no, channelmode=no, status=no, titlebar=no";
+			window.open(url, "_blank", option);
+		});
+
+ 		var initBody;
+
+		function beforPrint(){
+			calendars = document.body.innerHTML;
+			document.body.innerHTML = cm_image_wrapper.innerHTML;
+		}
+		
+		function afterPrint(){
+			document.body.innerHTML = calendars;
+		}
+		
+		function printArea(){
+			window.print();
+		}
+		
+		window.onbeforeprint = beforPrint;
+		window.onafterPrint = afterPrint;
+
+		$("#mw-print").on("click", function(){
+			printArea();
+		});
+		
+		_setDomControlForMSIE();
+		
+		var $menuHeight = $(".menu-wrapper").height()-8;
+		$("#cm-thumbs, #cm-contents").css("height", $(window).height()-$menuHeight);
+		$('#cct-page').on("click", function() {
+			$('#cm-thumbs, .ad-back, .ad-forward').toggleClass('hide');
+			if($open == false){
+				$('#cm-thumbs').css("overflow-y", "scroll");
+				$open = true;	
+			}else{
+				$('#cm-thumbs').css("overflow-y", "hidden");
+				$open = false;
+			}
+		});
+
+		
+		$('#cct-list').click(function() {
+			$('#cm-contents').toggleClass('hide');
+		});
+
+		$('#cct-close').click(function() {
+			$('#cm-thumbs, .ad-back, .ad-forward').addClass('hide');
+			$('#cm-contents').addClass('hide');
+			if($open == true){
+				$('#cm-thumbs').css("overflow-y", "hidden");
+				$open = false;
+			}
+		});
+
+		$('#page-slider').slider({
+			min: 0,
+			max: slider_arr.length - 1,
+			change: function( event, ui ) {
+				var data = slider_arr[ui.value];
+				$('a#' + data).trigger('click');
+			},
+			create: function( event, ui ) {
+        var id = window.location.hash.replace(/^#ad-image-/g, '');
+        var index = $.inArray(Number(id), slider_arr);
+        $(this).slider('option', 'value', index);
+			}
+		});
+
+		$('span#pagecount').text('/ ' + slider_arr.length);
+
+		$('#mw-zoomin').click(function() {
+			if (!isZoomActive) {
+				enableZoom();
+			}
+		});
+		$('#mw-zoomout').click(function() {
+			if (isZoomActive) {
+				isZoomActive = false;
+				disableZoom();
+			}
+		});
+		
+    $('#mw-bookmark').click(function() {
+      $('#bookmark-dialog').dialog({
+				modal: true,
+				draggable: false,
+				resizable: false,
+				title: '북마크',
+				width: '740',
+				height: '600',
+				position: {
+					at: 'top'
+				},
+        open: function( event, ui ) {
+          var $result = $('#bd-result');
+			    $result.empty();
+
+          var bookmarkCnt = bookmark_arr.length;
+          if (bookmarkCnt == 0) {
+            $('.ui-dialog').css('height', 100);
+					  var oCell_noResult= $(document.createElement('div')).attr('class', 'sd-result-head').append('북마크된 페이지가 없습니다.');
+            $result.append(oCell_noResult);
+          } else {
+            for (var i in bookmark_arr) {
+                var document_srl = bookmark_arr[i];
+                var index = $.inArray(Number(document_srl), slider_arr) + 1;
+
+                var oCell = $(document.createElement('div')).css({
+                    'margin': 10,
+                    'width': 210, 
+                    'height': 210,
+                    'background': '#ddd',
+                    'float': 'left'
+                });
+                if (i % 3 == 0) oCell.css('clear', 'left');
+                $result.append(oCell);
+
+                var oDivThumb = $(document.createElement('div')).css({
+                    'width': 130,
+                    'height': 130,
+                    'position': 'relative',
+                    'top': 10,
+                    'left': '50%',
+                    'margin-left': -65
+                });
+                var oImage = $(new Image()).attr('id', 'bd-thumb-' + document_srl);
+						    _getThumbnailSrc(document_srl, 'img#bd-thumb-');
+                oDivThumb.append(oImage);
+                oCell.append(oDivThumb);
+
+                var oDivPage = $(document.createElement('div')).css({
+                    'width': 60,
+                    'float': 'left',
+                    'margin-left': 20
+                }).append('페이지');
+                var oDivPageVal = $(document.createElement('div')).css('width', '90%').append(index);
+                oCell.append(oDivPage);
+                oCell.append(oDivPageVal);
+
+                var oDivTitle = $(document.createElement('div')).css({
+                    'width': 60,
+                    'margin-left': 20
+                }).append('제목');
+                var oDivTitleVal = $(document.createElement('div')).css({
+                    'width': '90%',
+                    'margin-top': 10,
+                    'margin-left': 20
+                });
+                oCell.append(oDivTitle);
+                oCell.append(oDivTitleVal);
+
+                $.each(slider_js, function(idx, obj) {
+                    if (document_srl == obj.document_srl) {
+                        var variables = obj.variables;
+                        var title = variables.title;
+                        if (title.length > 20) title = title.substring(0, 19) + '...';
+
+                        var oSpanAttr = {};
+                        oSpanAttr['class'] = 'cm-content-a';
+                        oSpanAttr['data'] = document_srl;
+                        var oSpan = $(document.createElement('span')).attr(oSpanAttr).append(title).click(function() { clickTriger(this); $('#bookmark-dialog').dialog('close'); }); 
+                        oDivTitleVal.append(oSpan);
+                    }
+                });
+            }
+          }
+        },
+				close: function( event, ui ) {
+				}
+			});
+    });
+
+		$('span.cm-content-a').click(function() {
+			clickTriger(this);
+		});
+		$('#mw-search').click(function() {
+			$('#search-dialog').dialog({
+				modal: true,
+				draggable: false,
+				resizable: false,
+				title: '검색',
+				width: 400,
+				height: 100,
+				position: {
+					at: 'top'
+				},
+				open: function( event, ui ) {},
+				close: function( event, ui ) {
+					initDialog();
+				}
+			});
+		});
+		$('#sdf-button').click(function() {
+			$('#sd-result').empty();
+
+			var data = {
+				'mid': '{$mid}',
+				'search_keyword': $('#search_keyword').val(),
+				'search_target': 'title_content',
+				'act': 'dispBoardContentList'
+			};
+			$.ajax({
+				type: 'POST',
+				url: '{getUrl()}',
+				data: data,
+				contentType: 'application/json'
+			}).done(function(resp) {
+				if ($.browser.msie == true && parseInt($.browser.version, 10) < 10) {
+					$('.ui-dialog').css({
+						'width': '800px',
+						'height': '100%',
+						'max-height': '600px',
+						'overflow-y': 'scroll'
+					});
+					$('#search-dialog').dialog('option', 'position', 'top');
+					$('#search-dialog').css('height', '90%');
+				} else {
+					$('.ui-dialog').animate({
+						'width': '800px',
+						'height': '100%',
+						'max-height': '600px',
+						'overflow-y': 'scroll'
+					}, {
+						'duration': 500,
+						'step': function() {
+							$('#search-dialog').dialog('option', 'position', 'top');
+							$('#search-dialog').css('height', '90%');
+						}
+					});
+				}
+
+				var oResult = $('#sd-result');
+				var document_list = $.parseJSON(resp).document_list;
+				if (document_list.length == 0) {
+				  var oCell_noResult= $(document.createElement('div')).attr('class', 'sd-result-head').append('검색결과가 없습니다.');
+					oResult.append(oCell_noResult);
+				} else {
+					var oCell_title = $(document.createElement('div')).attr('class', 'cell_1 sd-result-head').append('제목');
+					var oCell_image = $(document.createElement('div')).attr('class', 'cell_2 sd-result-head').append('미리보기');
+					var oCell_content = $(document.createElement('div')).attr('class', 'cell_3 sd-result-head').append('내용');
+					var oClear = $(document.createElement('div')).attr('class', 'clear-both');
+					oResult.append(oCell_title, oCell_image, oCell_content, oClear);
+
+					for (var i in document_list) {
+						var document_srl = document_list[i].document_srl;
+						var title = document_list[i].title;
+						var content = document_list[i].content;
+
+						var oCell_1_attr = {};
+						oCell_1_attr['class'] = 'cell_1 cm-content-a';
+						oCell_1_attr['data'] = document_srl;
+						var oCell_1 = $(document.createElement('span')).attr(oCell_1_attr).append(title).click(function() { clickTriger(this); $('#search-dialog').dialog('close'); });
+						var oImage = $(new Image()).attr('id', 'sd-thumb-' + document_srl);
+						var oCell_2 = $(document.createElement('div')).attr('class', 'cell_2').append(oImage);
+						var oCell_3 = $(document.createElement('div')).attr('class', 'cell_3').append(strip_tags(content));
+						var oClear_both = $(document.createElement('div')).attr('class', 'clear-both');
+
+						oResult.append(oCell_1, oCell_2, oCell_3, oClear_both);
+
+						_getThumbnailSrc(document_srl, 'img#sd-thumb-');
+					}
+				}
+			}).fail(function(msg) {
+				console.log('Fail. ' + msg);
+			});
+    });
+    $('span.toggler').click(function(){
+        var id = window.location.hash.replace(/^#ad-image-/g, '');
+        var index = $.inArray(Number(id), bookmark_arr);
+
+        if (index >= 0) {
+            bookmark_arr.splice(index, 1);
+        } else {
+            bookmark_arr.push(Number(id));
+            bookmark_arr.sort();
+        }
+
+        $(this).toggleClass('off');
+    });
+	});
+});
+</script>
+
+
+
+<div class="menu-wrapper">
+	<div id="tatsuta"></div>
+
+	<ul class="mw-sub2">
+		<li id="mw-start-page" class="nav-btn1"><img src="img/firstBtn.jpg">
+		</li>
+		<li id="mw-prev-page" class="nav-btn1"><img src="img/prevBtn.jpg">
+		</li>
+
+		<li id="mw-next-page" class="nav-btn1"><img src="img/nextBtn.jpg">
+		</li>
+		<li id="mw-end-page" class="nav-btn1_last"><img src="img/lastBtn.jpg">
+		</li>
+	</ul>
+	
+	<ul class="mw-sub">
+		<li id="mw-zoomin" class="nav-btn2">
+			<img src="img/plusBtn.jpg" alt="plusBtn">
+		</li>
+		<li id="mw-zoomout" class="nav-btn2">
+			<img src="img/minusBtn.jpg" alt="minusBtn">
+		</li>
+		<li id="mw-bookmark" class="nav-btn2">
+      <!-- TODO rename img src -->
+			<img src="img/bookmark_button.png" alt="bookmarkBtn">
+		</li>
+		<li id="mw-mail" class="nav-btn2">
+			<a href="mailto:tatsutakorea@tatsutakorea.com">
+				<img src="img/mailBtn.jpg" border="0" alt="mailBtn">
+			</a>
+		</li>
+		<li id="mw-print" class="nav-btn2">
+			<img src="img/printBtn.jpg" alt="printBtn">
+		</li>
+		<li id="mw-pdfdown" class="nav-btn2">
+			<a href="http://www.web2pdfconvert.com/download?path=851ddc21-e8e4-4a1c-9f1d-79e06eacf5bfplease.pdf">
+				<img src="img/dloadBtn.jpg" border="0" alt="dloadBtn">
+			</a>
+		</li>
+		<li id="mw-size" class="nav-btn3">
+				<img src="img/helpBtn.jpg">
+		</li>
+	</ul>
+	<ul class="mw-sub">
+
+		
+		<li id="mw-input-pagenum">
+			<input type="text" name="pagenation" class="countBox" style="width:40px;">
+			<span id="pagecount">&nbsp;</span>
+		</li>
+		
+		<li id="mw-go">&nbsp;
+		</li>
+		
+		<li id="mw-search" class="nav-btn"><img src="img/searchBtn.png">
+		</li>
+	</ul>
+	<div class="clear"></div>
+</div>
+
+
+	<div id="page-slider">
+		<div class="clear"></div>
+	</div>
+
+  <div id="bookmark-toggle">
+    <span class="toggler off">&nbsp;</span>
+  </div>
+	
+	<div id="catalog-main">
+		<div id="cm_image_wrapper">&nbsp;</div>
+		<div id="catalog-table-contents">
+			<div id="cm-thumbs" class="hide">
+				<ul id="cm-thumb-list">
+					<li class="clearfix" loop="$document_list=>$doc">
+          <a href="{$doc->getThumbSourceFile()}" id="{$doc->document_srl}"> 
+							<img src="{$doc->getThumbnail($mi->thumbnail_width, $mi->thumbnail_height, $mi->thumbnail_type)}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div id="cm-contents" class="hide">
+				<ul id="cm-content-list">
+					<li class="clearfix" loop="$notice_list=>$no,$document">
+						<span class="cm-content-a" data="{$no}">
+							{$document->getTitle($module_info->subject_cut_size)}											
+						</span>
+					</li>
+				</ul>
+			</div>
+			<ul id="catalog-content-tab">
+				<li id="cct-page" class="margin1">
+					<img src="img/tab1.png">	
+				</li>
+				<li  id="cct-list" class="margin2">
+					<img src="img/tab2.png">	
+				</li>
+				<li  id="cct-close" class="margin2">
+					<img src="img/tab3.png">	
+				</li>
+			</ul>
+		</div>
+		<div class="clear"></div>
+
+		<div id="nav-screen" style="z-index:9999">
+			<img id="nav-screen-img">
+		</div>
+	</div>
+
+	<div id="search-dialog">
+		<div id="sd-form">
+			<input type="text" id="search_keyword" value="{htmlspecialchars($search_keyword)}" title="{$lang->cmd_search}" class="iText" />
+			<button id="sdf-button" class="btn" type="button">{$lang->cmd_search}</button>
+		</div>
+		<div id="sd-result"></div>
+	</div>
+
+  <div id="bookmark-dialog">
+		<div id="bd-result"></div>
+  </div>

@@ -1,0 +1,33 @@
+body{
+	background-color:red;
+}
+
+#page-slider{
+	display:none;
+	width:0;
+	height:0;
+}
+
+#cm-image{
+	position:relative;
+	left:0;
+	top:0;
+	background-color:red;
+	width:100%;
+	
+}
+
+#cm-image img{
+	position:fixed;
+	left:0;
+	top:0;
+	width:100%;
+
+
+}
+
+#cm-prev, #cm-next{
+	width:0;
+	height:0;
+	display:none;
+}
