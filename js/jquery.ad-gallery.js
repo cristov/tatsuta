@@ -668,6 +668,10 @@
      *                          and it's animation has finished
      */
     showImage: function(index, callback) {
+      if(this.images.length == 0) {
+        alert('표시할 이미지가 없습니다.\n메인 화면으로 이동합니다.');
+        window.location.href = '/';
+      }
       if(this.images[index] && !this.in_transition && index != this.current_index) {
         var context = this;
         var image = this.images[index];
@@ -694,7 +698,7 @@
      */
     _showWhenLoaded: function(index, callback) {
       if(this.images[index]) {
-		  $('input[name="pagenation"]').val(index+1);
+		    $('input[name="pagenation"]').val(index+1);
 
         var context = this;
 
@@ -855,7 +859,7 @@
               }
             ).error(
               function() {
-                alert('페이지를 열 수 없습니다.\n관리자에게 문의하여 주시기 바랍니다.');
+                alert('이미지를 불러오는데 실패하였습니다.\n관리자에게 문의하여 주시기 바랍니다.');
                 image.error = true;
                 image.preloaded = false;
                 image.size = false;
