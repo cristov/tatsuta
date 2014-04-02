@@ -684,6 +684,8 @@
         
         var slider = $('#page-slider');
         slider.slider('value', index);
+
+        setBookmarkToggle();
       };
     },
     /**
