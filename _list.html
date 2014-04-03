@@ -210,6 +210,27 @@ jQuery(function($) {
 			}
 		});
 
+    $('input[name="pagenation"]').keypress(function(e) {
+      var page = $('input[name="pagenation"]').val();
+      var keycode = (e.keyCode ? e.keyCode : e.which);
+      if(keycode == '13'){
+          if(!$.isNumeric(page)) {
+            e.stopPropagation();
+            alert('숫자만 입력 가능합니다.');
+            return;
+          }
+          if(Number(page) < 1 || Number(page) > slider_arr.length) {
+            e.stopPropagation();
+            alert('유효하지 않은 페이지입니다.');
+            return;
+          }
+
+          var data = slider_arr[Number(page) - 1];
+          $('a#' + data).trigger('click');
+      }
+      e.stopPropagation();
+    });
+
 		$('span#pagecount').text('/ ' + slider_arr.length);
 
 		$('#mw-zoomin').click(function() {
