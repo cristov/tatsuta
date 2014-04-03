@@ -355,7 +355,8 @@ jQuery(function($) {
 				}
 			});
 		});
-		$('#sdf-button').click(function() {
+
+    var searchStart = function() {
 			$('#sd-result').empty();
 
 			var data = {
@@ -428,6 +429,16 @@ jQuery(function($) {
 			}).fail(function(msg) {
 				console.log('Fail. ' + msg);
 			});
+    };
+    $('#sdf-button').click(function() {
+        searchStart();
+    });
+    $('#search_keyword').keypress(function(e) {
+      var keycode = (e.keyCode ? e.keyCode : e.which);
+      if(keycode == '13'){
+        searchStart();
+      }
+      e.stopPropagation();
     });
     $('span.toggler').click(function(){
         var id = window.location.hash.replace(/^#ad-image-/g, '');
