@@ -34,13 +34,33 @@ li {
 	background-repeat: no-repeat;
 	background-position: left bottom;
 	padding:0 20px 0 20px;
-	margin:4px 0 4px 0;;
+	margin:4px 0 4px 0;
+  height:100%;
+}
+.mw-sub2 {
+	float:left;	
+	background-image: url(img/line.png);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	padding:0 20px 0 20px;
+	margin:4px 0 4px 0;
+  height:100%;
 }
 .mw-sub * {
 	text-align:center;
 	display:block;
 	float:left;
 	vertical-align:middle;
+}
+.nav-btn {
+}
+.nav-btn1 {
+}
+.nav-btn1_last {
+}
+.nav-btn2 {
+}
+.nav-btn3 {
 }
 #mw-input-pagenum {
 	margin-top:8px;
@@ -247,7 +267,6 @@ li {
 .clear-both {
 	clear: both;
 }
-
 #bookmark-toggle {
     z-index:10;
     position:absolute;
@@ -255,13 +274,11 @@ li {
     margin-left:-80px;
     top:60px;
 }
-
 span.toggler {
     background: url(modules/board/skins/xe_2010_gallery/img/on.png) no-repeat;
     cursor: pointer;
     padding: 5px 20px;
 }
-
 span.toggler.off {
     background: url(modules/board/skins/xe_2010_gallery/img/off.png) no-repeat;
 }
